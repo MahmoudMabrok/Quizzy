@@ -1,4 +1,4 @@
 package com.example.android.quizzy.util;
 
-public class Constants {
+public interface Constants {
 }
