@@ -35,11 +35,10 @@ public class LoginApiImpl implements LoginApi {
     @Override
     public Completable registerInFirebaseDatabase(User user) {
 
-        if(user instanceof Teacher){
+        if (user instanceof Teacher) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(Constants.USERS_KEY).child(Constants.TEACHERS_KEY).child(((Teacher) user).getTelephoneNumber());
             return RxFirebaseDatabase.setValue(reference, user);
-        }
-        else if(user instanceof Student){
+        } else if (user instanceof Student) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(Constants.USERS_KEY).child(Constants.TEACHERS_KEY).child(((Student) user).getTeacherTelephoneNumber()).child(Constants.STUDENTS_KEY).child(user.getId());
             return RxFirebaseDatabase.setValue(reference, user);
         }
@@ -56,6 +55,7 @@ public class LoginApiImpl implements LoginApi {
 
     /**
      * checks if the teacher with the given telephone number exists in fire-base database or not
+     *
      * @param teacherTelephoneNumber the given telephone number
      * @return Single that indicate whether the teacher exists or not or an error occurred while accessing database
      */
@@ -70,10 +70,9 @@ public class LoginApiImpl implements LoginApi {
                 teachersReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(teacherTelephoneNumber)){
+                        if (dataSnapshot.hasChild(teacherTelephoneNumber)) {
                             emitter.onSuccess(true);
-                        }
-                        else {
+                        } else {
                             emitter.onSuccess(false);
                         }
                     }

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //check if user logged or still needs
-        if(FirebaseAuth.getInstance().currentUser == null){
+        if (FirebaseAuth.getInstance().currentUser == null) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             startActivity(intent)
         }

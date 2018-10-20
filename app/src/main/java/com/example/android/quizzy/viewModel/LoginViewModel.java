@@ -10,6 +10,7 @@ import io.reactivex.Maybe;
 public interface LoginViewModel {
 
     Completable register(HashMap<String, Object> body);
+
     Maybe<FirebaseUser> login(HashMap<String, String> body);
 
 }

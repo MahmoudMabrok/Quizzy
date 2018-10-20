@@ -12,7 +12,7 @@ public class ApiLayerModule {
 
     @Provides
     @Singleton
-    LoginApi provideLoginApi(){
+    LoginApi provideLoginApi() {
         return new LoginApiImpl();
     }
 

@@ -9,7 +9,7 @@ public class Student extends User {
     private String teacherTelephoneNumber;
 
 
-    public Student(@NonNull String id){
+    public Student(@NonNull String id) {
         super(id);
     }
 

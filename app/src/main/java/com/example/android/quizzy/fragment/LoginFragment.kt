@@ -23,8 +23,8 @@ class LoginFragment : Fragment() {
     private val TAG = "LoginFragment"
 
     @Inject
-    lateinit var loginViewModel : LoginViewModel
-    private lateinit var disposable : Disposable
+    lateinit var loginViewModel: LoginViewModel
+    private lateinit var disposable: Disposable
     private lateinit var transient: LoginTransitionInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class LoginFragment : Fragment() {
         activity?.title = getString(R.string.login)
     }
 
-    private fun setLoginButtonOnClickListener(){
+    private fun setLoginButtonOnClickListener() {
         login_button.setOnClickListener {
             Log.d(TAG, "login button clicked")
             //Do not respond to user clicks for now
@@ -58,28 +58,28 @@ class LoginFragment : Fragment() {
             login_error_text_view.visibility = View.GONE
 
             //check internet connection
-            if(!Utils.isNetworkConnected(context)){
+            if (!Utils.isNetworkConnected(context)) {
                 showErrorMessage(R.string.no_internet_connection)
                 return@setOnClickListener
             }
 
             //get email and password entered by user
-            val userInput : HashMap<String, String> = getUserInput()
+            val userInput: HashMap<String, String> = getUserInput()
 
             //check empty email or password
-            if(!Utils.checkEmptyInputs(userInput[Constants.EMAIL_KEY], userInput[Constants.PASSWORD_KEY])){
+            if (!Utils.checkEmptyInputs(userInput[Constants.EMAIL_KEY], userInput[Constants.PASSWORD_KEY])) {
                 showErrorMessage(R.string.forgot_email_password)
                 return@setOnClickListener
             }
 
             //check email validity
-            if(!Utils.isValidEmail(userInput[Constants.EMAIL_KEY])){
+            if (!Utils.isValidEmail(userInput[Constants.EMAIL_KEY])) {
                 showErrorMessage(R.string.invalid_email)
                 return@setOnClickListener
             }
 
             //check password validity
-            if(!Utils.isValidPassword(userInput[Constants.PASSWORD_KEY])){
+            if (!Utils.isValidPassword(userInput[Constants.PASSWORD_KEY])) {
                 showErrorMessage(R.string.invalid_password)
                 return@setOnClickListener
             }
@@ -92,7 +92,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun callLoginApi(body : HashMap<String, String>){
+    private fun callLoginApi(body: HashMap<String, String>) {
         disposable = loginViewModel.login(body).subscribe({
             Log.d(TAG, "logged in")
             //hide loading progress bar
@@ -113,8 +113,8 @@ class LoginFragment : Fragment() {
         })
     }
 
-    fun setClickRegisterOnClickListener(){
-        click_register_text_view.setOnClickListener{
+    fun setClickRegisterOnClickListener() {
+        click_register_text_view.setOnClickListener {
             transient.openFragment(RegisterFragment())
         }
     }
@@ -122,8 +122,8 @@ class LoginFragment : Fragment() {
     /**
      * extract email and password of user in a HashMap
      */
-    private fun getUserInput() : HashMap<String, String>{
-        val userInput : HashMap<String, String> = HashMap()
+    private fun getUserInput(): HashMap<String, String> {
+        val userInput: HashMap<String, String> = HashMap()
         userInput[Constants.EMAIL_KEY] = login_email_edit_text.text.trim().toString()
         userInput[Constants.PASSWORD_KEY] = login_password_edit_text.text.trim().toString()
         return userInput
@@ -132,20 +132,20 @@ class LoginFragment : Fragment() {
     /**
      * show error message to user
      */
-    private fun showErrorMessage(messageId : Int){
+    private fun showErrorMessage(messageId: Int) {
         login_error_text_view.visibility = View.VISIBLE
         login_error_text_view.text = getString(messageId)
         login_button.isClickable = true
     }
 
-    private fun showErrorMessage(message : String?){
+    private fun showErrorMessage(message: String?) {
         login_error_text_view.visibility = View.VISIBLE
         login_error_text_view.text = message
         login_button.isClickable = true
     }
 
-    interface LoginTransitionInterface{
-        fun openFragment(fragment : Fragment)
+    interface LoginTransitionInterface {
+        fun openFragment(fragment: Fragment)
     }
 
 }

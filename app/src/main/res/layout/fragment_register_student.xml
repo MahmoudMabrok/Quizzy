@@ -2,18 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="center_vertical">
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical">
 
-    <LinearLayout
-        style="@style/RegisterFields">
+    <LinearLayout style="@style/RegisterFields">
 
         <EditText
             android:id="@+id/register_student_first_name_edit_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/first_name"/>
+            android:hint="@string/first_name" />
 
         <EditText
             android:id="@+id/register_student_last_name_edit_text"
@@ -27,8 +26,8 @@
     <EditText
         android:id="@+id/register_student_teacher_telephone_number_edit_text"
         style="@style/RegisterFields"
-        android:inputType="number"
-        android:hint="@string/teacher_telephone_number" />
+        android:hint="@string/teacher_telephone_number"
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/register_student_academic_year_edit_text"
@@ -45,22 +44,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default16_margin"
-        android:visibility="gone"
         android:gravity="center_horizontal"
-        android:textColor="@color/red" />
+        android:textColor="@color/red"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/register_student_loading_progress_bar"
         android:layout_width="@dimen/progress_bar_dimens"
         android:layout_height="@dimen/progress_bar_dimens"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/register_student_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/register"
-        android:layout_margin="@dimen/default8_margin" />
+        android:layout_margin="@dimen/default8_margin"
+        android:text="@string/register" />
 
 </LinearLayout>

@@ -3,7 +3,7 @@ package com.example.android.quizzy.model;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
-public class Teacher extends User{
+public class Teacher extends User {
 
     private String telephoneNumber;
     private String subject;

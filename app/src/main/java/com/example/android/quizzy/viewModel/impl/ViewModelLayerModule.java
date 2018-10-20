@@ -15,7 +15,7 @@ public class ViewModelLayerModule {
 
     @Provides
     @Singleton
-    LoginViewModel provideLoginViewModel(Context context, LoginApi api){
+    LoginViewModel provideLoginViewModel(Context context, LoginApi api) {
         return new LoginViewModelImpl(context, api);
     }
 

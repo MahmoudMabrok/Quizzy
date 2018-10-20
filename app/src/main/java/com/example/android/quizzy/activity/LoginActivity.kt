@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import com.example.android.quizzy.R
 import com.example.android.quizzy.fragment.LoginFragment
 
-class LoginActivity : AppCompatActivity() , LoginFragment.LoginTransitionInterface{
+class LoginActivity : AppCompatActivity(), LoginFragment.LoginTransitionInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

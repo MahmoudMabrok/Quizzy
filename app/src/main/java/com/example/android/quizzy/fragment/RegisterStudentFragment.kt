@@ -22,14 +22,14 @@ class RegisterStudentFragment : Fragment() {
     private val TAG = "RegisterStudentFragment"
 
     @Inject
-    lateinit var loginViewModel : LoginViewModel
+    lateinit var loginViewModel: LoginViewModel
 
     private lateinit var disposable: Disposable
 
     private lateinit var transient: LoginFragment.LoginTransitionInterface
 
     companion object {
-        fun newInstance(map : HashMap<String, Any>) : RegisterStudentFragment{
+        fun newInstance(map: HashMap<String, Any>): RegisterStudentFragment {
             val registerStudentFragment = RegisterStudentFragment()
             val args = Bundle()
             args.putSerializable(Constants.INPUTS_KEY, map)
@@ -62,13 +62,13 @@ class RegisterStudentFragment : Fragment() {
         activity?.title = getString(R.string.register_as_student)
     }
 
-    private fun setRegisterButtonClickListener(userInputs : HashMap<String, Any>){
-        register_student_button.setOnClickListener{
+    private fun setRegisterButtonClickListener(userInputs: HashMap<String, Any>) {
+        register_student_button.setOnClickListener {
             Log.d(TAG, "register button clicked")
-            if(!extractUserInputs(userInputs))
+            if (!extractUserInputs(userInputs))
                 return@setOnClickListener
 
-            if(!validateUserInputs())
+            if (!validateUserInputs())
                 return@setOnClickListener
 
             //hide error text
@@ -95,31 +95,28 @@ class RegisterStudentFragment : Fragment() {
         }
     }
 
-    private fun extractUserInputs(userInputs: HashMap<String, Any>) : Boolean{
+    private fun extractUserInputs(userInputs: HashMap<String, Any>): Boolean {
         val firstName = register_student_first_name_edit_text.text.toString().trim()
-        if(firstName.isEmpty()) {
+        if (firstName.isEmpty()) {
             showErrorMessage(R.string.required_student_fields)
             return false
-        }
-        else{
+        } else {
             userInputs[Constants.FIRST_NAME_KEY] = firstName
         }
 
         val lastName = register_student_last_name_edit_text.text.toString().trim()
-        if(lastName.isEmpty()) {
+        if (lastName.isEmpty()) {
             showErrorMessage(R.string.required_student_fields)
             return false
-        }
-        else{
+        } else {
             userInputs[Constants.LAST_NAME_KEY] = lastName
         }
 
         val teacherTelephoneNumber = register_student_teacher_telephone_number_edit_text.text.toString().trim()
-        if(teacherTelephoneNumber.isEmpty()) {
+        if (teacherTelephoneNumber.isEmpty()) {
             showErrorMessage(R.string.required_student_fields)
             return false
-        }
-        else{
+        } else {
             userInputs[Constants.TEACHER_TELEPHONE_NUMBER_KEY] = teacherTelephoneNumber
         }
 
@@ -129,11 +126,11 @@ class RegisterStudentFragment : Fragment() {
     /**
      * validate user inputs
      */
-    private fun validateUserInputs() : Boolean{
+    private fun validateUserInputs(): Boolean {
         //validate first name property
         val firstName = register_student_first_name_edit_text.text.toString().trim()
-        if(!firstName.isEmpty()) {
-            if(!Utils.isValidName(firstName)) {
+        if (!firstName.isEmpty()) {
+            if (!Utils.isValidName(firstName)) {
                 showErrorMessage(R.string.invalid_name)
                 return false
             }
@@ -141,8 +138,8 @@ class RegisterStudentFragment : Fragment() {
 
         //validate first name property
         val lastName = register_student_last_name_edit_text.text.toString().trim()
-        if(!lastName.isEmpty()) {
-            if(!Utils.isValidName(lastName)) {
+        if (!lastName.isEmpty()) {
+            if (!Utils.isValidName(lastName)) {
                 showErrorMessage(R.string.invalid_name)
                 return false
             }
@@ -150,8 +147,8 @@ class RegisterStudentFragment : Fragment() {
 
         //validate teacher telephone number
         val teacherTelephoneNumber = register_student_teacher_telephone_number_edit_text.text.toString().trim()
-        if(!teacherTelephoneNumber.isEmpty()){
-            if(!Utils.isValidTelephoneNumber(teacherTelephoneNumber)) {
+        if (!teacherTelephoneNumber.isEmpty()) {
+            if (!Utils.isValidTelephoneNumber(teacherTelephoneNumber)) {
                 showErrorMessage(R.string.invalid_telephone_number)
                 return false
             }
@@ -163,12 +160,12 @@ class RegisterStudentFragment : Fragment() {
     /**
      * show error message to user
      */
-    private fun showErrorMessage(messageId : Int){
+    private fun showErrorMessage(messageId: Int) {
         register_student_error_text_view.visibility = View.VISIBLE
         register_student_error_text_view.text = getString(messageId)
     }
 
-    private fun showErrorMessage(message : String?){
+    private fun showErrorMessage(message: String?) {
         register_student_error_text_view.visibility = View.VISIBLE
         register_student_error_text_view.text = message
     }

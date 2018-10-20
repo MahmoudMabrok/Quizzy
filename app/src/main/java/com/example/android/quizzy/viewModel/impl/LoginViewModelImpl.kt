@@ -21,8 +21,8 @@ class LoginViewModelImpl : LoginViewModel {
 
     private val TAG = "LoginViewModelImpl"
 
-    private val api : LoginApi
-    private val context : Context
+    private val api: LoginApi
+    private val context: Context
 
     constructor(context: Context, api: LoginApi) {
         this.api = api
@@ -32,32 +32,29 @@ class LoginViewModelImpl : LoginViewModel {
     override fun register(body: HashMap<String, Any>): Completable {
         Log.d(TAG, "register executes")
         //check if the user is a teacher or a student
-        val teacherUser : Boolean
-        if(body.containsKey(Constants.TELEPHONE_NUMBER_KEY)){
+        val teacherUser: Boolean
+        if (body.containsKey(Constants.TELEPHONE_NUMBER_KEY)) {
             Log.d(TAG, "register as teacher")
             teacherUser = true
-        }
-        else if(body.containsKey(Constants.TEACHER_TELEPHONE_NUMBER_KEY)){
+        } else if (body.containsKey(Constants.TEACHER_TELEPHONE_NUMBER_KEY)) {
             Log.d(TAG, "register as student")
             teacherUser = false
-        }
-        else{
+        } else {
             Log.d(TAG, "not a teacher neither a student")
             throw Exception()
         }
 
-        if(teacherUser){
+        if (teacherUser) {
             //teacher
             return api.teacherExists(body[Constants.TELEPHONE_NUMBER_KEY] as String).flatMapCompletable {
-                if(it){
+                if (it) {
                     Log.d(TAG, "teacher already exists")
                     Completable.error(Throwable(context.getString(R.string.teacher_with_same_number)))
-                }
-                else{
+                } else {
                     api.registerInFirebaseAuth(body.get(Constants.EMAIL_KEY) as String, body.get(Constants.PASSWORD_KEY) as String)
                             .flatMapCompletable { AuthResult ->
                                 Log.d(TAG, "registered in fire-base auth")
-                                val user : User = Teacher(AuthResult.user.uid)
+                                val user: User = Teacher(AuthResult.user.uid)
 
                                 addUserInfo(user, body)
 
@@ -66,23 +63,21 @@ class LoginViewModelImpl : LoginViewModel {
                             }
                 }
             }
-        }
-        else{
+        } else {
             //student
             return api.teacherExists(body[Constants.TEACHER_TELEPHONE_NUMBER_KEY] as String).flatMapCompletable {
-                if(it){
+                if (it) {
                     api.registerInFirebaseAuth(body.get(Constants.EMAIL_KEY) as String, body.get(Constants.PASSWORD_KEY) as String)
                             .flatMapCompletable { AuthResult ->
                                 Log.d(TAG, "registered in fire-base auth")
-                                val user : User = Student(AuthResult.user.uid)
+                                val user: User = Student(AuthResult.user.uid)
 
                                 addUserInfo(user, body)
 
                                 api.registerInFirebaseDatabase(user)
 
                             }
-                }
-                else {
+                } else {
                     Log.d(TAG, "teacher does not exist")
                     Completable.error(Throwable(context.getString(R.string.no_teacher_with_number)))
                 }
@@ -94,61 +89,55 @@ class LoginViewModelImpl : LoginViewModel {
     override fun login(body: HashMap<String, String>): Maybe<FirebaseUser> {
         Log.d(TAG, "login executes")
         return api.login(body[Constants.EMAIL_KEY], body[Constants.PASSWORD_KEY]).flatMap { AuthResult ->
-             Maybe.just(AuthResult.user)
+            Maybe.just(AuthResult.user)
         }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
     }
 
-    private fun addUserInfo(user : User, body: HashMap<String, Any>){
+    private fun addUserInfo(user: User, body: HashMap<String, Any>) {
 
-        if(body.containsKey(Constants.FIRST_NAME_KEY)){
+        if (body.containsKey(Constants.FIRST_NAME_KEY)) {
             user.firstName = body.get(Constants.FIRST_NAME_KEY) as String
-        }
-        else{
+        } else {
             Log.d(TAG, "no first name field")
             throw Exception()
         }
 
-        if(body.containsKey(Constants.LAST_NAME_KEY)){
+        if (body.containsKey(Constants.LAST_NAME_KEY)) {
             user.lastName = body.get(Constants.LAST_NAME_KEY) as String
-        }
-        else{
+        } else {
             Log.d(TAG, "no last name field")
             throw Exception()
         }
 
-        if(body.containsKey(Constants.CITY_KEY)){
+        if (body.containsKey(Constants.CITY_KEY)) {
             user.city = body.get(Constants.CITY_KEY) as String
         }
 
 
-        if(user is Teacher){
-            if(body.containsKey(Constants.TELEPHONE_NUMBER_KEY)){
+        if (user is Teacher) {
+            if (body.containsKey(Constants.TELEPHONE_NUMBER_KEY)) {
                 user.telephoneNumber = body.get(Constants.TELEPHONE_NUMBER_KEY) as String
-            }
-            else{
+            } else {
                 Log.d(TAG, "no telephone number field")
                 throw Exception()
             }
 
-            if(body.containsKey(Constants.SUBJECT_KEY)){
+            if (body.containsKey(Constants.SUBJECT_KEY)) {
                 user.subject = body.get(Constants.SUBJECT_KEY) as String
-            }
-            else{
+            } else {
                 Log.d(TAG, "no subject field")
                 throw Exception()
             }
-        }
-        else if (user is Student){
-            if(body.containsKey(Constants.ACADEMIC_YEAR_KEY)){
+        } else if (user is Student) {
+            if (body.containsKey(Constants.ACADEMIC_YEAR_KEY)) {
                 user.academicYear = body.get(Constants.ACADEMIC_YEAR_KEY) as String
             }
 
-            if(body.containsKey(Constants.TEACHER_TELEPHONE_NUMBER_KEY)){
+            if (body.containsKey(Constants.TEACHER_TELEPHONE_NUMBER_KEY)) {
                 user.teacherTelephoneNumber = body.get(Constants.TEACHER_TELEPHONE_NUMBER_KEY) as String
-            }
-            else{
+            } else {
                 Log.d(TAG, "no teacher telephone number field")
                 throw Exception()
             }

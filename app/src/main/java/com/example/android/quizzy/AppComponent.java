@@ -13,7 +13,9 @@ import dagger.Component;
 public interface AppComponent {
 
     void inject(LoginFragment loginFragment);
+
     void inject(RegisterStudentFragment registerStudentFragment);
+
     void inject(RegisterTeacherFragment registerTeacherFragment);
 
 }
