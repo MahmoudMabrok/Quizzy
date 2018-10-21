@@ -34,4 +34,11 @@
     <string name="signed_in">Signed in successfully</string>
     <string name="teacher_with_same_number">There is a teacher with the same telephone number</string>
     <string name="no_teacher_with_number">There is no teacher with this telephone number</string>
+    <string name="title_activity_teacher_home">TeacherHome</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>
