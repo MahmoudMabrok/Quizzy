@@ -9,7 +9,7 @@ import java.util.List;
  */
 @Keep
 public class Question {
-
+    private String key;
     private String question ;
     private List<String> answerList ;
     private int weight ;
@@ -22,6 +22,14 @@ public class Question {
         this.question = question;
         this.weight = weight;
         this.correctAnswer = correctAnswer;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getQuestion() {

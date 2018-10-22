@@ -40,7 +40,7 @@ class RegisterTeacherFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as QuizzyApplication).component.inject(this)
+        //     (activity?.application as QuizzyApplication).component.inject(this)
         transient = activity as LoginFragment.LoginTransitionInterface
     }
 

@@ -47,7 +47,8 @@ public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeach
         Quiz quiz = quizList.get(position);
         holder.tvQuizName.setText(quiz.getName());
         holder.tvQuizTeacherName.setText(quiz.getCreatorName());
-        holder.tvQuizTotalScore.setText(quiz.getQuestionList().size());
+
+        //holder.tvQuizTotalScore.setText(quiz.getQuestionList().size());
     }
 
     @Override

@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.fragment.QuizzListTeacher;
+import com.example.android.quizzy.util.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,8 +64,6 @@ public class TeacherHome extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -83,6 +83,8 @@ public class TeacherHome extends AppCompatActivity
         }
     }
 
+    private String key = "0114919427";
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -90,7 +92,7 @@ public class TeacherHome extends AppCompatActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_quiz:
-                openQuizz();
+                openQuizzListFragment();
                 break;
 
             case R.id.nav_reorts:
@@ -103,12 +105,19 @@ public class TeacherHome extends AppCompatActivity
         return true;
     }
 
-    private void openQuizz() {
+    private void openQuizzListFragment() {
         transition = manager.beginTransaction();
+        QuizzListTeacher teacher = new QuizzListTeacher();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.TEACHERS_KEY, key);
+        teacher.setArguments(bundle);
+        transition.replace(R.id.container, teacher).commit();
 
     }
 
     private void openReports() {
         transition = manager.beginTransaction();
     }
+
+
 }

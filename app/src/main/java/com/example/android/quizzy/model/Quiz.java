@@ -9,6 +9,7 @@ import java.util.List;
  */
 @Keep
 public class Quiz {
+    private String key;
     private String name ;
     private String creatorName ;
     private List<Question> questionList ;
@@ -19,6 +20,14 @@ public class Quiz {
     public Quiz(String name, String creatorName) {
         this.name = name;
         this.creatorName = creatorName;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {
