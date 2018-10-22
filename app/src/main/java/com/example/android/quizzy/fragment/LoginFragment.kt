@@ -100,6 +100,7 @@ class LoginFragment : Fragment() {
 
             //Open Main Activity with user info
             val intent = Intent(context, MainActivity::class.java)
+
             startActivity(intent)
             activity?.finish()
             Toast.makeText(activity, R.string.signed_in, Toast.LENGTH_SHORT).show()
