@@ -12,6 +12,7 @@ public class Quiz {
     private String key;
     private String name ;
     private String creatorName ;
+    private String teacherKey;
     private List<Question> questionList ;
 
     public Quiz() {
@@ -20,6 +21,14 @@ public class Quiz {
     public Quiz(String name, String creatorName) {
         this.name = name;
         this.creatorName = creatorName;
+    }
+
+    public String getTeacherKey() {
+        return teacherKey;
+    }
+
+    public void setTeacherKey(String teacherKey) {
+        this.teacherKey = teacherKey;
     }
 
     public String getKey() {
