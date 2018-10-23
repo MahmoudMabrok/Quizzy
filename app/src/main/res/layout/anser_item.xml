@@ -3,16 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/default16_margin"
+    android:background="#ddaa00"
     android:padding="@dimen/default16_margin">
 
-    <CheckedTextView
+    <!--<CheckedTextView
         android:id="@+id/tvAnswer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:checkMark="@mipmap/ic_checked"
         android:gravity="center"
+        android:checked="true"
         android:text="AAA"
         android:textSize="20sp" />
+
+    -->
+    <TextView
+        android:id="@+id/tvAnswer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <CheckBox
+        android:id="@+id/cbAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

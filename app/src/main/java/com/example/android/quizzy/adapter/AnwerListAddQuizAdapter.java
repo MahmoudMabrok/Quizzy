@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.example.android.quizzy.R;
 
@@ -21,9 +23,11 @@ import butterknife.ButterKnife;
 public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQuizAdapter.ViewHolder> {
 
     private List<String> anserList;
+    private List<String> checkedList;
 
     public AnwerListAddQuizAdapter() {
         anserList = new ArrayList<>();
+        checkedList = new ArrayList<>();
     }
 
     @NonNull
@@ -34,13 +38,41 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String s = anserList.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final String s = anserList.get(position);
         holder.tvAnswer.setText(s);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.cbAnswer.isChecked()) {
+                    // checkedList.remove(s);
+                    holder.cbAnswer.setChecked(false);
+                } else {
+                    //checkedList.add(s);
+                    holder.cbAnswer.setChecked(true);
+                }
+            }
+        });
+
+        holder.cbAnswer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    checkedList.add(s);
+                } else {
+                    checkedList.remove(s);
+                }
+            }
+        });
     }
 
     public List<String> getAnserList() {
         return anserList;
+    }
+
+    public List<String> getCheckedList() {
+        return checkedList;
     }
 
     @Override
@@ -50,13 +82,28 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
 
     public void add(String s) {
         anserList.add(s);
+        notifyItemInserted(anserList.size() - 1);
+    }
 
+    public void deleteAll() {
+        anserList.clear();
+        checkedList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void setList(List<String> answerList) {
+        for (String s : answerList) {
+            add(s);
+        }
     }
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvAnswer)
-        CheckedTextView tvAnswer;
+        TextView tvAnswer;
+
+        @BindView(R.id.cbAnswer)
+        CheckBox cbAnswer;
 
         ViewHolder(View view) {
             super(view);

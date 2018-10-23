@@ -2,6 +2,7 @@ package com.example.android.quizzy.model;
 
 import android.support.annotation.Keep;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +61,6 @@ public class Quiz {
     }
 
     public void setQuestionList(List<Question> questionList) {
-        this.questionList = questionList;
+        this.questionList = new ArrayList<>(questionList);
     }
 }

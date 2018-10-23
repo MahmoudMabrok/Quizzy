@@ -20,11 +20,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-compiler:$dagger_version"
@@ -44,12 +45,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
     implementation 'com.balsikandar.android:crashreporter:1.0.9'
-
 }
 
 apply plugin: 'com.google.gms.google-services'

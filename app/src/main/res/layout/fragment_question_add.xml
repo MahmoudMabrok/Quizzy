@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="#aaaaee"
     tools:context=".fragment.QuestionAddFragment">
 
 
@@ -13,29 +14,37 @@
         android:layout_height="wrap_content"
         android:hint="Enter question" />
 
-
-    <EditText
-        android:id="@+id/edAnswerAddFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter answer" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btnAddAnswer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="add" />
+        <EditText
+            android:id="@+id/edAnswerAddFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter answer" />
+
+        <Button
+            android:id="@+id/btnAddAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="add Answer" />
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvAnsWersAddQuizz"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1" />
 
     <Button
         android:id="@+id/btnAddQuestion"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Add Question" />
 
 
 </LinearLayout>

@@ -18,6 +18,7 @@ import com.example.android.quizzy.activity.AddEditQuiz;
 import com.example.android.quizzy.adapter.AnwerListAddQuizAdapter;
 import com.example.android.quizzy.model.Question;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,11 +44,13 @@ public class QuestionAddFragment extends Fragment {
     Button btnAddQuestion;
     Unbinder unbinder;
 
+    AnwerListAddQuizAdapter adapter;
+    boolean isUpdate;
     public QuestionAddFragment() {
         // Required empty public constructor
     }
 
-    AnwerListAddQuizAdapter adapter;
+    private List<String> answerList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +59,11 @@ public class QuestionAddFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_question_add, container, false);
         unbinder = ButterKnife.bind(this, view);
         initRv();
+        Question question = (Question) getArguments().getSerializable("q");
+        if (question != null) {
+            fillUi(question);
+            isUpdate = true;
+        }
         return view;
     }
 
@@ -72,11 +80,18 @@ public class QuestionAddFragment extends Fragment {
         unbinder.unbind();
     }
 
+    private void fillUi(Question question) {
+        edQuestionAddFragment.setText(question.getQuestion());
+        adapter.setList(question.getAnswerList());
+    }
+
     @OnClick(R.id.btnAddAnswer)
     public void onBtnAddAnswerClicked() {
         String anser = edAnswerAddFragment.getText().toString();
         if (!TextUtils.isEmpty(anser)) {
             adapter.add(anser);
+            answerList.add(anser);
+            edAnswerAddFragment.setText("");
         } else {
             show("Enter Answer");
         }
@@ -90,11 +105,13 @@ public class QuestionAddFragment extends Fragment {
     public void onBtnAddQuestionClicked() {
         String questionName = edQuestionAddFragment.getText().toString();
         if (!TextUtils.isEmpty(questionName)) {
-            List<String> list = adapter.getAnserList();
-            if (list.size() > 0) {
+            if (answerList.size() > 0) {
                 Question question = new Question();
                 question.setQuestion(questionName);
-                question.setAnswerList(list);
+                question.setAnswerList(answerList);
+                if (adapter.getCheckedList().size() > 0) {
+                    question.setCorrectAnswer(adapter.getCheckedList().get(0));
+                }
                 question.setWeight(1);
                 addQuestion(question);
                 blankFields();
@@ -107,9 +124,16 @@ public class QuestionAddFragment extends Fragment {
     }
 
     private void addQuestion(Question question) {
-        ((AddEditQuiz) getActivity()).onQuestionAdd(question);
+        if (question != null && question.getAnswerList().size() > 0) {
+            ((AddEditQuiz) getActivity()).onQuestionAdd(question);
+        } else {
+            show("aaa");
+        }
     }
 
     private void blankFields() {
+        edQuestionAddFragment.setText("");
+        adapter.deleteAll();
+        answerList.clear();
     }
 }

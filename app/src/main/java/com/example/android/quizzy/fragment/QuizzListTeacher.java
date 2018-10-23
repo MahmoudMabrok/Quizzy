@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
@@ -43,6 +44,8 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     Unbinder unbinder;
     @BindView(R.id.fabAddQuizz)
     FloatingActionButton fabAddQuizz;
+    @BindView(R.id.tvNoInternet)
+    TextView tvNoInternet;
     private QuizeListTeacherAdapter adapter;
 
     private static final String TAG = "QuizzListTeacher";
@@ -71,7 +74,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvQuizListTeacher.setAdapter(adapter);
         rvQuizListTeacher.setLayoutManager(manager);
-
+        controlTextView(false);
         database = FirebaseDatabase.getInstance();
 
         FirebaseDatabase.getInstance().
@@ -93,6 +96,9 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
                         }
                         if (list.size() > 0) {
                             adapter.setList(list);
+                            controlTextView(true);
+                        } else {
+                            controlTextView(false);
                         }
                     }
 
@@ -100,6 +106,14 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+    }
+
+    private void controlTextView(boolean b) {
+        if (b) {
+            tvNoInternet.setVisibility(View.VISIBLE);
+        } else {
+            tvNoInternet.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -112,12 +126,16 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     @Override
     public void onQuizzClick(Quiz quiz) {
         Intent view = new Intent(getContext(), AddEditQuiz.class);
-        view.putExtra("key", quiz.getName());
+        view.putExtra("t_key", teacherKey);
+        view.putExtra("q_key", quiz.getKey());
         startActivity(view);
     }
 
     @OnClick(R.id.fabAddQuizz)
     public void onViewClicked() {
-
+        Toast.makeText(getContext(), "qqq", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), AddEditQuiz.class);
+        intent.putExtra("t_key", teacherKey);
+        startActivity(intent);
     }
 }

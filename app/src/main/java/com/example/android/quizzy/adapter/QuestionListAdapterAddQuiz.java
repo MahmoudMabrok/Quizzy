@@ -57,6 +57,11 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
         return questionList.size();
     }
 
+    public void clear() {
+        questionList.clear();
+        notifyDataSetChanged();
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuestion)

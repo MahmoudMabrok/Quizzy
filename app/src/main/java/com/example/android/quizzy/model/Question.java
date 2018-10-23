@@ -2,13 +2,15 @@ package com.example.android.quizzy.model;
 
 import android.support.annotation.Keep;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Mahmoud on 10/21/2018.
  */
 @Keep
-public class Question {
+public class Question implements Serializable {
     private String key;
     private String question ;
     private List<String> answerList ;
@@ -45,7 +47,7 @@ public class Question {
     }
 
     public void setAnswerList(List<String> answerList) {
-        this.answerList = answerList;
+        this.answerList = new ArrayList<>(answerList);
     }
 
     public int getWeight() {
