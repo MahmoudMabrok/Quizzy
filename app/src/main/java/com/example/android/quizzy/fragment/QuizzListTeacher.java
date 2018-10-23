@@ -3,6 +3,7 @@ package com.example.android.quizzy.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.activity.AddEditQuiz;
 import com.example.android.quizzy.adapter.QuizeListTeacherAdapter;
 import com.example.android.quizzy.interfaces.OnQuizzClick;
 import com.example.android.quizzy.model.Quiz;
@@ -27,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -38,6 +41,8 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     @BindView(R.id.rvQuizListTeacher)
     RecyclerView rvQuizListTeacher;
     Unbinder unbinder;
+    @BindView(R.id.fabAddQuizz)
+    FloatingActionButton fabAddQuizz;
     private QuizeListTeacherAdapter adapter;
 
     private static final String TAG = "QuizzListTeacher";
@@ -62,7 +67,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     }
 
     private void initRv() {
-        adapter = new QuizeListTeacherAdapter(getContext());
+        adapter = new QuizeListTeacherAdapter(getContext(), this);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvQuizListTeacher.setAdapter(adapter);
         rvQuizListTeacher.setLayoutManager(manager);
@@ -75,25 +80,26 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
                 .child(teacherKey)
                 .child(Constants.QUIZZ_CHILD)
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: " + dataSnapshot);
-                List<Quiz> list = new ArrayList<>();
-                Quiz temp;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    temp = snapshot.getValue(Quiz.class);
-                    if (temp != null) {
-                        list.add(temp);
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "onDataChange: " + dataSnapshot);
+                        List<Quiz> list = new ArrayList<>();
+                        Quiz temp;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            temp = snapshot.getValue(Quiz.class);
+                            if (temp != null) {
+                                list.add(temp);
+                            }
+                        }
+                        if (list.size() > 0) {
+                            adapter.setList(list);
+                        }
                     }
-                }
-                if (list.size() > 0) {
-                    adapter.setList(list);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 
     @Override
@@ -105,7 +111,13 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
 
     @Override
     public void onQuizzClick(Quiz quiz) {
-        Intent view = new Intent(getContext(), null);
+        Intent view = new Intent(getContext(), AddEditQuiz.class);
+        view.putExtra("key", quiz.getName());
         startActivity(view);
+    }
+
+    @OnClick(R.id.fabAddQuizz)
+    public void onViewClicked() {
+
     }
 }

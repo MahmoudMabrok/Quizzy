@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.interfaces.OnQuizzClick;
 import com.example.android.quizzy.model.Quiz;
 
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeach
 
     private Context context;
     private List<Quiz> quizList;
+    private OnQuizzClick onQuizzClick;
 
-    public QuizeListTeacherAdapter(Context context) {
+    public QuizeListTeacherAdapter(Context context, OnQuizzClick click) {
         this.context = context;
+        onQuizzClick = click;
         quizList = new ArrayList<>();
     }
 
@@ -44,11 +47,16 @@ public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeach
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Quiz quiz = quizList.get(position);
+        final Quiz quiz = quizList.get(position);
         holder.tvQuizName.setText(quiz.getName());
         holder.tvQuizTeacherName.setText(quiz.getCreatorName());
-
         //holder.tvQuizTotalScore.setText(quiz.getQuestionList().size());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onQuizzClick.onQuizzClick(quiz);
+            }
+        });
     }
 
     @Override

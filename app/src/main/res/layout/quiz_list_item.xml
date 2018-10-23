@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/default16_margin"
     android:orientation="vertical"
+    android:background="#AAAAAA"
     android:padding="@dimen/default16_margin">
-
 
     <TextView
         android:id="@+id/tvQuizName"
