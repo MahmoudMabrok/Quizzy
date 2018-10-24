@@ -27,5 +27,7 @@ public interface Constants {
 
 
     String QUIZZ_CHILD = "quiz";
+    String QUIZZ_QUESTION_LIST = "questionList";
 
+    String Question_answer_list = "answerList";
 }

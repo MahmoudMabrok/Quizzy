@@ -62,6 +62,11 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
         notifyDataSetChanged();
     }
 
+    public void remove(int pos) {
+        questionList.remove(pos);
+        notifyDataSetChanged();
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuestion)

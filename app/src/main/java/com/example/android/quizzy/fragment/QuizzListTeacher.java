@@ -77,6 +77,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         controlTextView(false);
         database = FirebaseDatabase.getInstance();
 
+        //region fetch data
         FirebaseDatabase.getInstance().
                 getReference(Constants.USERS_KEY)
                 .child(Constants.TEACHERS_KEY)
@@ -106,13 +107,16 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+        //endregion
     }
 
     private void controlTextView(boolean b) {
-        if (b) {
-            tvNoInternet.setVisibility(View.VISIBLE);
-        } else {
-            tvNoInternet.setVisibility(View.GONE);
+        if (tvNoInternet != null) {
+            if (b) {
+                tvNoInternet.setVisibility(View.VISIBLE);
+            } else {
+                tvNoInternet.setVisibility(View.GONE);
+            }
         }
     }
 

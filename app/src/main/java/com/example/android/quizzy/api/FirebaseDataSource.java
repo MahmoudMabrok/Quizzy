@@ -35,12 +35,18 @@ public class FirebaseDataSource {
 
 
     public void addQuiz(String teacherKey, Quiz quiz) {
-        String key = teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).push().getKey();
-        quiz.setKey(key);
-        teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).child(key).setValue(quiz);
+        if (quiz.getKey() == null) {
+            String key = teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).push().getKey();
+            quiz.setKey(key);
+        }
+        teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).child(quiz.getKey()).setValue(quiz);
     }
 
     public void updateQuiz(String teacherKey, Quiz quiz) {
         teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).child(quiz.getKey()).setValue(quiz);
+    }
+
+    public DatabaseReference getSpecificQuizRef(String teacherKey, String quizzKey) {
+        return teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).child(quizzKey).getRef();
     }
 }

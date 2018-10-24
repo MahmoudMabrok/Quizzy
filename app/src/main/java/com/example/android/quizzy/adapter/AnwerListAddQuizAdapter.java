@@ -92,9 +92,12 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
     }
 
     public void setList(List<String> answerList) {
-        for (String s : answerList) {
-            add(s);
+        if (answerList != null) {
+            for (String s : answerList) {
+                add(s);
+            }
         }
+
     }
 
 

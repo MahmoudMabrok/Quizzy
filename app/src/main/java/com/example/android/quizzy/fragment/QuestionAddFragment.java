@@ -59,8 +59,9 @@ public class QuestionAddFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_question_add, container, false);
         unbinder = ButterKnife.bind(this, view);
         initRv();
-        Question question = (Question) getArguments().getSerializable("q");
-        if (question != null) {
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.getSerializable("q") != null) {
+            Question question = (Question) bundle.getSerializable("q");
             fillUi(question);
             isUpdate = true;
         }
@@ -92,6 +93,7 @@ public class QuestionAddFragment extends Fragment {
             adapter.add(anser);
             answerList.add(anser);
             edAnswerAddFragment.setText("");
+
         } else {
             show("Enter Answer");
         }

@@ -21,6 +21,10 @@ import com.example.android.quizzy.fragment.QuestionAddFragment;
 import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.model.Quiz;
+import com.example.android.quizzy.util.Constants;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +50,6 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     @BindView(R.id.btnSaveQuizz)
     Button btnSaveQuizz;
 
-
     private List<Question> questionList = new ArrayList<>();
     private FragmentManager manager = getSupportFragmentManager();
     private FragmentTransaction transaction;
@@ -54,6 +57,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
 
     private String teacherKey;
     private DataRepo dataRepo;
+
+    private String quizzKey;
+    private boolean isUpdate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +70,49 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         Intent intent = getIntent();
         teacherKey = intent.getStringExtra("t_key");
         if (teacherKey != null) {
-
+            quizzKey = intent.getStringExtra("q_key");
+            if (quizzKey != null) {
+                isUpdate = true;
+                fetchQustionList();
+            }
         } else {
             finish();
         }
 
         initRv();
         replaceQuestionFragment();
+    }
 
+    private void fetchQustionList() {
+        dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = (String) dataSnapshot.child("name").getValue();
+                edQuizName.setText(name);
+
+                Question question;
+                questionList = new ArrayList<>();
+                List<String> strings = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
+                    question = dataSnapshot.getValue(Question.class);
+                    if (question != null) {
+                        for (DataSnapshot snapshot1 : snapshot.child(Constants.Question_answer_list).getChildren()) {
+                            strings.add((String) snapshot1.getValue());
+                        }
+                        question.setAnswerList(strings);
+                        questionList.add(question);
+                    }
+                }
+                if (questionList.size() > 0) {
+                    adapter.setQuestionList(questionList);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void replaceQuestionFragment() {
@@ -97,10 +138,12 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 int pos = viewHolder.getAdapterPosition();
                 Question question = questionList.get(pos);
                 if (direction == ItemTouchHelper.RIGHT) {
+                    adapter.remove(pos);
+                    questionList.remove(pos);
                     replaceQuestionFragment(question);
                 } else {
                     questionList.remove(question);
-                    adapter.notifyDataSetChanged();
+                    adapter.remove(pos);
                 }
             }
         }).attachToRecyclerView(rvQustionListTeacher);
@@ -125,6 +168,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 quiz.setQuestionList(questionList);
                 quiz.setTeacherKey(teacherKey);
                 //// TODO: 10/23/2018 add weight/total score
+                if (isUpdate) {
+                    quiz.setKey(quizzKey);
+                }
                 dataRepo.addQuiz(quiz);
                 show("added");
                 blankFields();
