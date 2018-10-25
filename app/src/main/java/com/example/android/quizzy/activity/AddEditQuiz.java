@@ -94,7 +94,11 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 questionList = new ArrayList<>();
                 List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
+                    show("" + snapshot);
                     question = dataSnapshot.getValue(Question.class);
+                    //  show("before set " + question.getQuestion());
+                    question.setQuestion((String) dataSnapshot.child("question").getValue());
+                    //   show("@@"+question.getQuestion());
                     if (question != null) {
                         for (DataSnapshot snapshot1 : snapshot.child(Constants.Question_answer_list).getChildren()) {
                             strings.add((String) snapshot1.getValue());

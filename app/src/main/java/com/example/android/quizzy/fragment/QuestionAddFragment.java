@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class QuestionAddFragment extends Fragment {
 
     AnwerListAddQuizAdapter adapter;
     boolean isUpdate;
+
     public QuestionAddFragment() {
         // Required empty public constructor
     }
@@ -73,6 +75,27 @@ public class QuestionAddFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvAnsWersAddQuizz.setLayoutManager(manager);
         rvAnsWersAddQuizz.setAdapter(adapter);
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getAdapterPosition();
+                if (direction == ItemTouchHelper.RIGHT) {
+                    String anser = answerList.get(pos);
+                    answerList.remove(pos);
+                    adapter.remove(pos);
+                    edAnswerAddFragment.setText(anser);
+                } else {
+                    answerList.remove(pos);
+                    adapter.remove(pos);
+                }
+
+            }
+        }).attachToRecyclerView(rvAnsWersAddQuizz);
     }
 
     @Override
@@ -83,6 +106,8 @@ public class QuestionAddFragment extends Fragment {
 
     private void fillUi(Question question) {
         edQuestionAddFragment.setText(question.getQuestion());
+        show(question.getQuestion());
+        answerList = new ArrayList<>(question.getAnswerList());
         adapter.setList(question.getAnswerList());
     }
 

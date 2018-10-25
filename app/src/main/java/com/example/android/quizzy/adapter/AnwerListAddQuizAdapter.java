@@ -100,6 +100,13 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
 
     }
 
+    public void remove(int pos) {
+        String anser = anserList.get(pos);
+        checkedList.remove(anser);
+        anserList.remove(pos);
+        notifyDataSetChanged();
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvAnswer)

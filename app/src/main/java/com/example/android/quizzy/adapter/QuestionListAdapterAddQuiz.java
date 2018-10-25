@@ -28,6 +28,7 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
     }
 
     public void setQuestionList(List<Question> list) {
+        questionList.clear();
         for (Question question : list
                 ) {
             addQuestion(question);
