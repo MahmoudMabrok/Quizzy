@@ -110,6 +110,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         //endregion
     }
 
+
     private void controlTextView(boolean b) {
         if (tvNoInternet != null) {
             if (b) {

@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -83,28 +84,23 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         replaceQuestionFragment();
     }
 
+    private static final String TAG = "AddEditQuiz";
     private void fetchQustionList() {
         dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = (String) dataSnapshot.child("name").getValue();
                 edQuizName.setText(name);
-
+                Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
                 questionList = new ArrayList<>();
                 List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
-                    show("" + snapshot);
-                    question = dataSnapshot.getValue(Question.class);
-                    //  show("before set " + question.getQuestion());
-                    question.setQuestion((String) dataSnapshot.child("question").getValue());
-                    //   show("@@"+question.getQuestion());
+                    question = getQuestionFromJson(snapshot);
+                    Log.d(TAG, "onDataChange: 2 " + snapshot);
                     if (question != null) {
-                        for (DataSnapshot snapshot1 : snapshot.child(Constants.Question_answer_list).getChildren()) {
-                            strings.add((String) snapshot1.getValue());
-                        }
-                        question.setAnswerList(strings);
                         questionList.add(question);
+                        Log.d(TAG, "onDataChange: " + question.toString());
                     }
                 }
                 if (questionList.size() > 0) {
@@ -117,6 +113,18 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
 
             }
         });
+    }
+
+    private Question getQuestionFromJson(DataSnapshot snapshot) {
+        Question question = new Question();
+        question.setQuestion((String) snapshot.child("question").getValue());
+        question.setCorrectAnswer((String) snapshot.child("correctAnswer").getValue());
+        List<String> ansewrs = new ArrayList<>();
+        for (DataSnapshot snapshot1 : snapshot.child(Constants.Question_answer_list).getChildren()) {
+            ansewrs.add((String) snapshot1.getValue());
+        }
+        question.setAnswerList(ansewrs);
+        return question;
     }
 
     private void replaceQuestionFragment() {

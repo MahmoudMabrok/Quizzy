@@ -5,6 +5,7 @@ import android.support.annotation.Keep;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mahmoud on 10/21/2018.
@@ -16,6 +17,7 @@ public class Question implements Serializable {
     private List<String> answerList ;
     private int weight ;
     private String correctAnswer ;
+    public Map<String, List<String>> theanswer;
 
     public Question() {
     }
@@ -24,6 +26,15 @@ public class Question implements Serializable {
         this.question = question;
         this.weight = weight;
         this.correctAnswer = correctAnswer;
+    }
+
+
+    public Map<String, List<String>> getTheanswer() {
+        return theanswer;
+    }
+
+    public void setTheanswer(Map<String, List<String>> theanswer) {
+        this.theanswer = theanswer;
     }
 
     public String getKey() {
@@ -36,6 +47,17 @@ public class Question implements Serializable {
 
     public String getQuestion() {
         return question;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "key='" + key + '\'' +
+                ", question='" + question + '\'' +
+                ", answerList=" + answerList.size() +
+                ", weight=" + weight +
+                ", correctAnswer='" + correctAnswer + '\'' +
+                '}';
     }
 
     public void setQuestion(String question) {
