@@ -21,6 +21,7 @@ import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.fragment.QuestionAddFragment;
 import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
+import com.example.android.quizzy.model.QuestionToSerialize;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
 import com.google.firebase.database.DataSnapshot;
@@ -91,11 +92,13 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = (String) dataSnapshot.child("name").getValue();
                 edQuizName.setText(name);
+                Quiz quiz = dataSnapshot.getValue(Quiz.class);
                 Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
                 questionList = new ArrayList<>();
                 List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
+                    QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
                     question = getQuestionFromJson(snapshot);
                     Log.d(TAG, "onDataChange: 2 " + snapshot);
                     if (question != null) {
@@ -165,7 +168,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         transaction = manager.beginTransaction();
         QuestionAddFragment fragment = new QuestionAddFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("q", question);
+        /*bundle.putSerializable("q", question);*/
+        bundle.putStringArrayList(Constants.answerList, (ArrayList<String>) question.getAnswerList());
+        bundle.putString(Constants.question, question.getQuestion());
         fragment.setArguments(bundle);
         transaction.replace(R.id.questionContainer, fragment).commit();
     }

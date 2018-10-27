@@ -18,6 +18,7 @@ import com.example.android.quizzy.R;
 import com.example.android.quizzy.activity.AddEditQuiz;
 import com.example.android.quizzy.adapter.AnwerListAddQuizAdapter;
 import com.example.android.quizzy.model.Question;
+import com.example.android.quizzy.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +63,16 @@ public class QuestionAddFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         initRv();
         Bundle bundle = getArguments();
-        if (bundle != null && bundle.getSerializable("q") != null) {
-            Question question = (Question) bundle.getSerializable("q");
-            fillUi(question);
+        if (bundle != null) {
+            String question = bundle.getString(Constants.question);
+            ArrayList<String> anserList = bundle.getStringArrayList(Constants.answerList);
+            fillUi(question, anserList);
+            // fillUi(question);
             isUpdate = true;
         }
         return view;
     }
+
 
     private void initRv() {
         adapter = new AnwerListAddQuizAdapter();
@@ -102,6 +106,12 @@ public class QuestionAddFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    private void fillUi(String question, ArrayList<String> anser) {
+        edQuestionAddFragment.setText(question);
+        answerList = new ArrayList<>(anser);
+        adapter.setList(answerList);
     }
 
     private void fillUi(Question question) {

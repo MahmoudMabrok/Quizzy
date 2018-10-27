@@ -30,4 +30,10 @@ public interface Constants {
     String QUIZZ_QUESTION_LIST = "questionList";
 
     String Question_answer_list = "answerList";
+    String question = "question";
+    String answerList = "answerList";
+    String correctAnswer = "correctAnswer";
+    String weight = "weight";
+
+
 }

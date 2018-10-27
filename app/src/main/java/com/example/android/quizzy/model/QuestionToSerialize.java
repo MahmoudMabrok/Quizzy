@@ -11,18 +11,18 @@ import java.util.Map;
  * Created by Mahmoud on 10/21/2018.
  */
 @Keep
-public class Question implements Serializable {
-    private String key;
-    private String question ;
-    private List<String> answerList ;
-    private String correctAnswer ;
-    private int weight;
+public class QuestionToSerialize implements Serializable {
     public Map<String, List<String>> theanswer;
+    private String key;
+    private String question;
+    private List<String> answerList;
+    private int weight;
+    private String correctAnswer;
 
-    public Question() {
+    public QuestionToSerialize() {
     }
 
-    public Question(String question, int weight, String correctAnswer) {
+    public QuestionToSerialize(String question, int weight, String correctAnswer) {
         this.question = question;
         this.weight = weight;
         this.correctAnswer = correctAnswer;
@@ -49,6 +49,10 @@ public class Question implements Serializable {
         return question;
     }
 
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -58,10 +62,6 @@ public class Question implements Serializable {
                 ", weight=" + weight +
                 ", correctAnswer='" + correctAnswer + '\'' +
                 '}';
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
     }
 
     public List<String> getAnswerList() {
