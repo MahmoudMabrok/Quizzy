@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default16_margin"
+    android:background="#ffffff"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/default16_margin">
+
+    <TextView
+        android:id="@+id/tvQuestionNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default16_margin"
+        android:gravity="center_horizontal"
+        android:text="Q1"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/tvQuestionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_back"
+        android:gravity="center_horizontal"
+        android:text="Mo3tamed"
+        android:textSize="22sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvQuizzAnwerQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default16_margin" />
+
+
+</LinearLayout>

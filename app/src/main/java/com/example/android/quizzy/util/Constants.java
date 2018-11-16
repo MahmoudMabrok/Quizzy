@@ -35,5 +35,7 @@ public interface Constants {
     String correctAnswer = "correctAnswer";
     String weight = "weight";
 
+    String COMPLETED_QUIZZ = "completed";
+
 
 }

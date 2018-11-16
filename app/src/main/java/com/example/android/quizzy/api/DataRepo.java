@@ -20,4 +20,12 @@ public class DataRepo {
     public DatabaseReference getSpecificQuizRef(String teacherKey, String quizzKey) {
         return firebaseDataSource.getSpecificQuizRef(teacherKey, quizzKey);
     }
+
+    public String getUUID() {
+        return firebaseDataSource.getCurrentUserUUID();
+    }
+
+    public DatabaseReference getCompleteListRef(String teacherID, String studentUUID) {
+        return firebaseDataSource.getCompleteListRef(teacherID, studentUUID);
+    }
 }

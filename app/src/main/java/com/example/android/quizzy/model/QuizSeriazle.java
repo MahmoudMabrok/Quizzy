@@ -2,6 +2,7 @@ package com.example.android.quizzy.model;
 
 import android.support.annotation.Keep;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +10,26 @@ import java.util.List;
  * Created by Mahmoud on 10/21/2018.
  */
 @Keep
-public class Quiz {
+public class QuizSeriazle implements Serializable {
     private String key;
-    private String name ;
-    private String creatorName ;
+    private String name;
+    private String creatorName;
     private String teacherKey;
-    private List<Question> questionList ;
+    private List<Question> questionList;
     private int score;
 
-    public Quiz() {
+    public QuizSeriazle() {
     }
 
-    public Quiz(String name, String creatorName) {
+    public QuizSeriazle(String key, String name, String creatorName, String teacherKey, List<Question> questionList, int score) {
+        this.key = key;
         this.name = name;
         this.creatorName = creatorName;
+        this.teacherKey = teacherKey;
+        this.questionList = questionList;
+        this.score = score;
     }
+
 
     public int getScore() {
         return score;

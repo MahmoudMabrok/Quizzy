@@ -99,7 +99,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
                     QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
-                    question = getQuestionFromJson(snapshot);
+                    question = snapshot.getValue(Question.class);
                     Log.d(TAG, "onDataChange: 2 " + snapshot);
                     if (question != null) {
                         questionList.add(question);

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default16_margin"
+    android:alpha="90"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvQuizName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quiz1"
+        android:textSize="27sp" />
+
+    <TextView
+        android:id="@+id/tvQuizTeacherName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ahmed"
+        android:textSize="@dimen/textSize" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default16_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvQuizTotalScore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default16_margin"
+            android:layout_marginRight="@dimen/default16_margin"
+            android:layout_weight="1"
+            android:background="@drawable/item_back"
+            android:gravity="center_horizontal"
+            android:text="0 %"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tvQuizState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/item_back"
+            android:text="Not Attempted"
+            android:textColor="@color/not_attemped"
+            android:textSize="18dp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

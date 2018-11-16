@@ -49,4 +49,8 @@ public class FirebaseDataSource {
     public DatabaseReference getSpecificQuizRef(String teacherKey, String quizzKey) {
         return teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).child(quizzKey).getRef();
     }
+
+    public DatabaseReference getCompleteListRef(String teacherID, String studentUUID) {
+        return teacherRef.child(teacherID).child(Constants.STUDENTS_KEY).child(studentUUID).child(Constants.COMPLETED_QUIZZ).getRef();
+    }
 }

@@ -2,7 +2,6 @@ package com.example.android.quizzy.model;
 
 import android.support.annotation.Keep;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +10,13 @@ import java.util.Map;
  * Created by Mahmoud on 10/21/2018.
  */
 @Keep
-public class Question implements Serializable {
+public class Question {
     private String key;
     private String question ;
     private List<String> answerList ;
     private String correctAnswer ;
+    private String StudentAnswer;
+    private boolean state;
     private int weight;
     public Map<String, List<String>> theanswer;
 
@@ -28,6 +29,21 @@ public class Question implements Serializable {
         this.correctAnswer = correctAnswer;
     }
 
+    public String getStudentAnswer() {
+        return StudentAnswer;
+    }
+
+    public void setStudentAnswer(String studentAnswer) {
+        StudentAnswer = studentAnswer;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
 
     public Map<String, List<String>> getTheanswer() {
         return theanswer;

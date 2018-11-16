@@ -47,4 +47,5 @@
     <string name="add">add</string>
     <string name="quiz_name">Quiz Name</string>
     <string name="no_internet_connections">No Internet Connections</string>
+    <string name="title_activity_student">StudentActivity</string>
 </resources>
