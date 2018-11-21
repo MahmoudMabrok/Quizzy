@@ -64,7 +64,6 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         View view = inflater.inflate(R.layout.fragment_quizz_list_teacher, container, false);
         unbinder = ButterKnife.bind(this, view);
         teacherKey = getArguments().getString(Constants.TEACHERS_KEY);
-        Toast.makeText(getContext(), teacherKey, Toast.LENGTH_SHORT).show();
         initRv();
         return view;
     }
@@ -111,7 +110,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     }
 
     private void makeNoItem() {
-        tvNoInternet.setText("NO Quizz Added yet ☹☹");
+        //  tvNoInternet.setText(getString(R.strings.no_data_found));
     }
 
 

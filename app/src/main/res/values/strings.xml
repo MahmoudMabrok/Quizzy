@@ -46,7 +46,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add">add</string>
     <string name="quiz_name">Quiz Name</string>
-    <string name="no_internet_connections">No Internet Connections</string>
+    <string name="no_data_found">No Data Found ☹☹☹☹☹</string>
     <string name="title_activity_student">StudentActivity</string>
     <string name="signout">Sign Out</string>
 </resources>

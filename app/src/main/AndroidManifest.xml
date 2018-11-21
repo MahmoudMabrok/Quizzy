@@ -17,12 +17,8 @@
         <activity
             android:name=".activity.TeacherHome"
             android:label="@string/title_activity_teacher_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activity.AddEditQuiz" />
-        <activity
-            android:name=".activity.StudentActivity"
-            android:label="@string/title_activity_student"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -30,7 +26,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.QuizzQuestion"></activity>
+        <activity android:name=".activity.AddEditQuiz" />
+        <activity
+            android:name=".activity.StudentActivity"
+            android:label="@string/title_activity_student"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".activity.QuizzQuestion" />
     </application>
 
 </manifest>
