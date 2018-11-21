@@ -3,27 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/default16_margin"
+    android:alpha="90"
+    android:background="#ffffff"
     android:orientation="vertical"
-    android:background="#AAAAAA"
-    android:padding="@dimen/default16_margin">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvQuizName"
         android:layout_width="match_parent"
-        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textSize" />
+        android:text="Quiz1"
+        android:textSize="27sp" />
 
     <TextView
         android:id="@+id/tvQuizTeacherName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textSize" />
+        android:text="Ahmed"
+        android:textSize="@dimen/textSize"
+        android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/tvQuizTotalScore"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/textSize" />
 
 </LinearLayout>

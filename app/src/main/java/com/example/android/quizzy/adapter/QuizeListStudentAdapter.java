@@ -1,7 +1,7 @@
 package com.example.android.quizzy.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +17,7 @@ import com.example.android.quizzy.model.Quiz;
 import java.util.ArrayList;
 import java.util.List;
 
+import az.plainpie.PieView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,7 +51,6 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
         return new ViewHolder(view);
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Quiz quiz = quizList.get(position);
@@ -60,16 +60,22 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
         String text = "N/A";
         if (temp != null) {
             quiz = temp;
-            text = temp.getScore() + " %";
+            text = (temp.getScore()) + " / " + temp.getQuestionList().size();
             holder.tvQuizTotalScore.setText(text);
-            if (temp.getScore() <= 50) {
-                holder.tvQuizState.setTextColor(R.color.falid);
+            holder.piStudent.setPercentage(temp.getPercentage());
+            if (temp.getScore() <= (temp.getQuestionList().size()) / 2) {
+                holder.tvQuizState.setTextColor(Color.YELLOW);
+                holder.tvQuizState.setBackgroundColor(Color.RED);
+                holder.tvQuizState.setText("Failed");
             } else {
-                holder.tvQuizState.setTextColor(R.color.passed);
+                holder.tvQuizState.setTextColor(Color.GREEN);
+                holder.tvQuizState.setBackgroundColor(Color.BLACK);
+                holder.tvQuizState.setText("Succeded");
             }
         } else {
             holder.tvQuizTotalScore.setText(text);
-            holder.tvQuizState.setTextColor(R.color.not_attemped);
+            holder.tvQuizState.setTextColor(Color.DKGRAY);
+            holder.tvQuizState.setBackgroundColor(Color.WHITE);
         }
         final Quiz finalQuiz = quiz;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +103,10 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
         return quizList.size();
     }
 
+    public void addCompleteList(List<Quiz> completedList) {
+        this.completeList = new ArrayList<>(completedList);
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuizName)
         TextView tvQuizName;
@@ -104,7 +114,8 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
         TextView tvQuizTeacherName;
         @BindView(R.id.tvQuizTotalScore)
         TextView tvQuizTotalScore;
-
+        @BindView(R.id.piStudent)
+        PieView piStudent;
         @BindView(R.id.tvQuizState)
         TextView tvQuizState;
 

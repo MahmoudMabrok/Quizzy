@@ -53,4 +53,13 @@ public class FirebaseDataSource {
     public DatabaseReference getCompleteListRef(String teacherID, String studentUUID) {
         return teacherRef.child(teacherID).child(Constants.STUDENTS_KEY).child(studentUUID).child(Constants.COMPLETED_QUIZZ).getRef();
     }
+
+    public void addQuizTOCompleteList(Quiz quiz, String sID) {
+        teacherRef.child(quiz.getTeacherKey())
+                .child(Constants.STUDENTS_KEY)
+                .child(sID)
+                .child(Constants.COMPLETED_QUIZZ)
+                .child(quiz.getKey())
+                .setValue(quiz);
+    }
 }

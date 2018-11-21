@@ -38,4 +38,11 @@ public interface Constants {
     String COMPLETED_QUIZZ = "completed";
 
 
+    int Excellent = 4;
+    int VGOOD = 3;
+    int GOOD = 2;
+    int ACCEPT = 1;
+    int FAILED = 0;
+
+
 }

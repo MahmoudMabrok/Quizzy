@@ -12,7 +12,9 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.fragment.StudentReports;
 import com.example.android.quizzy.fragment.student_quiz_list;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +34,9 @@ public class StudentActivity extends AppCompatActivity
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //uuid from firebase
+        //teacher id from firebase
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,7 +83,7 @@ public class StudentActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            FirebaseAuth.getInstance().signOut();
         }
 
         return super.onOptionsItemSelected(item);
@@ -105,5 +110,8 @@ public class StudentActivity extends AppCompatActivity
     }
 
     private void openReports() {
+        transition = manager.beginTransaction();
+        StudentReports studentReports = new StudentReports();
+        transition.replace(R.id.containerStudent, studentReports).commit();
     }
 }

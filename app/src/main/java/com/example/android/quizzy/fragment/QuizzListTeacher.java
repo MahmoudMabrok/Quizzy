@@ -74,7 +74,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvQuizListTeacher.setAdapter(adapter);
         rvQuizListTeacher.setLayoutManager(manager);
-        controlTextView(false);
+        controlTextView(true);
         database = FirebaseDatabase.getInstance();
 
         //region fetch data
@@ -86,6 +86,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        controlTextView(false);
                         Log.d(TAG, "onDataChange: " + dataSnapshot);
                         List<Quiz> list = new ArrayList<>();
                         Quiz temp;
@@ -97,9 +98,8 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
                         }
                         if (list.size() > 0) {
                             adapter.setList(list);
-                            controlTextView(true);
                         } else {
-                            controlTextView(false);
+                            makeNoItem();
                         }
                     }
 
@@ -108,6 +108,10 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
                     }
                 });
         //endregion
+    }
+
+    private void makeNoItem() {
+        tvNoInternet.setText("NO Quizz Added yet ☹☹");
     }
 
 

@@ -2,9 +2,13 @@ package com.example.android.quizzy.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.android.quizzy.R;
@@ -21,6 +25,7 @@ import butterknife.ButterKnife;
  */
 public class QuestionQuizAdapter extends RecyclerView.Adapter<QuestionQuizAdapter.ViewHolder> {
 
+
     private List<Question> questionList;
 
     public QuestionQuizAdapter() {
@@ -34,13 +39,30 @@ public class QuestionQuizAdapter extends RecyclerView.Adapter<QuestionQuizAdapte
         return new ViewHolder(view);
     }
 
+    private static final String TAG = "QuestionQuizAdapter";
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         String strNum = "Question " + (position + 1);
         holder.tvQuestionNum.setText(strNum);
-        Question question = questionList.get(position);
+        final Question question = questionList.get(position);
         holder.tvQuestionTitle.setText(question.getQuestion());
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(holder.itemView.getContext(), android.R.layout.simple_dropdown_item_1line, question.getAnswerList());
+        holder.spAnswerList.setAdapter(adapter);
+        holder.spAnswerList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                String answer = (String) holder.spAnswerList.getSelectedItem();
+                Log.d(TAG, "onItemSelected: " + answer);
+                question.setStudentAnswer(answer);
+                questionList.set(position, question);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
       /*  final String s = anserList.get(position);
         holder.tvAnswer.setText(s);
@@ -82,12 +104,18 @@ public class QuestionQuizAdapter extends RecyclerView.Adapter<QuestionQuizAdapte
         notifyDataSetChanged();
     }
 
+    public List<Question> getList() {
+        return questionList;
+    }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuestionNum)
         TextView tvQuestionNum;
         @BindView(R.id.tvQuestionTitle)
         TextView tvQuestionTitle;
+        @BindView(R.id.spAnswerList)
+        Spinner spAnswerList;
         @BindView(R.id.rvQuizzAnwerQuestion)
         RecyclerView rvQuizzAnwerQuestion;
 

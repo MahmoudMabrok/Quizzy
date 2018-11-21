@@ -48,6 +48,10 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
     implementation 'com.balsikandar.android:crashreporter:1.0.9'
+
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    compile 'com.github.zurche:plain-pie:v0.2.9'
 }
 
 apply plugin: 'com.google.gms.google-services'

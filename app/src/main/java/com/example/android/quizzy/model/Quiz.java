@@ -16,13 +16,30 @@ public class Quiz {
     private String teacherKey;
     private List<Question> questionList ;
     private int score;
-
+    private int percentage;
+    private int grade;
     public Quiz() {
     }
 
     public Quiz(String name, String creatorName) {
         this.name = name;
         this.creatorName = creatorName;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 
     public int getScore() {

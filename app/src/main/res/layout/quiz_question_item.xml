@@ -23,8 +23,24 @@
         android:layout_height="wrap_content"
         android:background="@drawable/item_back"
         android:gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default16_margin"
         android:text="Mo3tamed"
         android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default16_margin"
+        android:gravity="center_horizontal"
+        android:text="Select the correct answer from below list ☺☺☺"
+        android:textSize="22sp" />
+
+    <Spinner
+        android:id="@+id/spAnswerList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvQuizzAnwerQuestion"

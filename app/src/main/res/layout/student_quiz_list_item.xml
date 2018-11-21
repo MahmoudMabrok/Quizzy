@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="@dimen/default16_margin"
     android:alpha="90"
     android:background="#ffffff"
@@ -19,6 +20,7 @@
         android:id="@+id/tvQuizTeacherName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="Ahmed"
         android:textSize="@dimen/textSize" />
 
@@ -40,11 +42,19 @@
             android:text="0 %"
             android:textSize="18dp" />
 
+        <az.plainpie.PieView
+            android:id="@+id/piStudent"
+            android:layout_width="75dp"
+            android:layout_height="60dp"
+            app:inner_pie_padding="2"
+            app:percentage="25" />
+
         <TextView
             android:id="@+id/tvQuizState"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:background="@drawable/item_back"
             android:text="Not Attempted"
             android:textColor="@color/not_attemped"

@@ -56,14 +56,16 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         }
     }
 
+    String studentUUID;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_student_quiz_list, container, false);
         unbinder = ButterKnife.bind(this, view);
+        //// TODO: 11/17/2018  get id from Auth
         //String studentUUID = dataRepo.getUUID();
-        String studentUUID;
         studentUUID = "-mahmoud";
         Log.d(TAG, "id " + studentUUID);
 
@@ -111,7 +113,7 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         dataRepo.getCompleteListRef(teacherID, studentUUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: " + dataSnapshot);
+                Log.d(TAG, "onDataChange:  completeList" + dataSnapshot);
                 List<Quiz> list = new ArrayList<>();
                 Quiz temp;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -121,6 +123,8 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
                     }
                 }
                 completedList = new ArrayList<>(list);
+                adapter.addCompleteList(completedList);
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -153,6 +157,7 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         Bundle bundle = new Bundle();
         bundle.putSerializable("quiz" ,quizSeriazle );
         intent.putExtra("quiz" , bundle);*/
+        intent.putExtra("sID", studentUUID);
         intent.putExtra("id", quiz.getKey());
         intent.putExtra("teacher", teacherID);
         getContext().startActivity(intent);

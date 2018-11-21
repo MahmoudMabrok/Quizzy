@@ -28,4 +28,8 @@ public class DataRepo {
     public DatabaseReference getCompleteListRef(String teacherID, String studentUUID) {
         return firebaseDataSource.getCompleteListRef(teacherID, studentUUID);
     }
+
+    public void addQuizTOCompleteList(Quiz quiz, String sID) {
+        firebaseDataSource.addQuizTOCompleteList(quiz, sID);
+    }
 }
