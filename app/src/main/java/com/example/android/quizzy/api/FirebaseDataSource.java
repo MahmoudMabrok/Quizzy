@@ -1,5 +1,6 @@
 package com.example.android.quizzy.api;
 
+import com.example.android.quizzy.model.AttemptedQuiz;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,5 +62,19 @@ public class FirebaseDataSource {
                 .child(Constants.COMPLETED_QUIZZ)
                 .child(quiz.getKey())
                 .setValue(quiz);
+    }
+
+    public DatabaseReference getStudentCompletedQuizz(String teacher, String sID, String quizeID) {
+        return teacherRef
+                .child(teacher)
+                .child(Constants.STUDENTS_KEY)
+                .child(sID).child(Constants.COMPLETED_QUIZZ)
+                .child(quizeID)
+                .getRef();
+
+    }
+
+    public void addAttemted(AttemptedQuiz attemptedQuiz, String quizeID, String teacher) {
+        teacherRef.child(teacher).child(Constants.QUIZZ_CHILD).child(quizeID).child("AttemptedList").push().setValue(attemptedQuiz);
     }
 }

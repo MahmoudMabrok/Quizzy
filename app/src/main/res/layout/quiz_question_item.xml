@@ -41,6 +41,23 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal" />
 
+    <TextView
+        android:id="@+id/stateOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Anwer is Correct"
+        android:textColor="#00ff00"
+        android:textSize="22sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/stateOFF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Anwer is Wrong"
+        android:textColor="#ff0000"
+        android:textSize="22sp"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvQuizzAnwerQuestion"

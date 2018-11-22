@@ -56,7 +56,7 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
         Quiz quiz = quizList.get(position);
         holder.tvQuizName.setText(quiz.getName());
         holder.tvQuizTeacherName.setText(quiz.getTeacherKey());
-        Quiz temp = getIfisInCompleteList(quiz);
+        final Quiz temp = getIfisInCompleteList(quiz);
         String text = "N/A";
         if (temp != null) {
             quiz = temp;
@@ -72,20 +72,30 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
                 holder.tvQuizState.setBackgroundColor(Color.BLACK);
                 holder.tvQuizState.setText("Succeded");
             }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onQuizzClick.onQuizzClick(temp);
+                }
+            });
+
         } else {
             holder.tvQuizTotalScore.setText(text);
             holder.tvQuizState.setTextColor(Color.DKGRAY);
             holder.tvQuizState.setBackgroundColor(Color.WHITE);
+
+            final Quiz finalQuiz = quiz;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "" + completeList.size(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "" + holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                    onQuizzClick.onQuizzClick(finalQuiz);
+                }
+            });
         }
-        final Quiz finalQuiz = quiz;
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "" + completeList.size(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, "" + holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
-                onQuizzClick.onQuizzClick(finalQuiz);
-            }
-        });
+
     }
 
     private Quiz getIfisInCompleteList(Quiz quiz) {

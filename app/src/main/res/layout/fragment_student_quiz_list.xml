@@ -16,7 +16,7 @@
             android:id="@+id/rvQuizListStudent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/default16_margin" />
+            android:paddingBottom="@dimen/default16_margin" />
 
     </LinearLayout>
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.android.quizzy.R;
@@ -24,6 +23,7 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
 
     private List<String> anserList;
     private List<String> checkedList;
+    private String correct = new String("");
 
     public AnwerListAddQuizAdapter() {
         anserList = new ArrayList<>();
@@ -42,29 +42,29 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
         final String s = anserList.get(position);
         holder.tvAnswer.setText(s);
 
+        if (s.equals(correct)) {
+            holder.cbAnswer.setChecked(true);
+        } else {
+            holder.cbAnswer.setChecked(false);
+        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                correct = s;
                 if (holder.cbAnswer.isChecked()) {
-                    // checkedList.remove(s);
                     holder.cbAnswer.setChecked(false);
                 } else {
-                    //checkedList.add(s);
                     holder.cbAnswer.setChecked(true);
                 }
+                notifyDataSetChanged();
             }
         });
 
-        holder.cbAnswer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    checkedList.add(s);
-                } else {
-                    checkedList.remove(s);
-                }
-            }
-        });
+    }
+
+    public String getCorrect() {
+        return correct;
     }
 
     public List<String> getAnserList() {

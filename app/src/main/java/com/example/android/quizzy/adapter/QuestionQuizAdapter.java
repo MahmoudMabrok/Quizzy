@@ -40,6 +40,7 @@ public class QuestionQuizAdapter extends RecyclerView.Adapter<QuestionQuizAdapte
     }
 
     private static final String TAG = "QuestionQuizAdapter";
+
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         String strNum = "Question " + (position + 1);
@@ -63,6 +64,26 @@ public class QuestionQuizAdapter extends RecyclerView.Adapter<QuestionQuizAdapte
 
             }
         });
+        holder.spAnswerList.setEnabled(true);
+        //case solved quizz
+        String answer = question.getStudentAnswer();
+        Log.d(TAG, "onBindViewHolder: " + answer);
+        if (answer != null) {
+            int pos = questionList.indexOf(answer);
+            Log.d(TAG, "onBindViewHolder: " + pos);
+            holder.spAnswerList.setSelection(pos);
+
+            //// TODO: 11/22/2018 state  icon or color
+            if (question.getCorrectAnswer().equals(answer)) {
+                holder.stateOK.setVisibility(View.VISIBLE);
+                holder.stateOFF.setVisibility(View.GONE);
+            } else {
+                holder.stateOFF.setVisibility(View.VISIBLE);
+                holder.stateOK.setVisibility(View.GONE);
+            }
+
+            holder.spAnswerList.setEnabled(false);
+        }
 
       /*  final String s = anserList.get(position);
         holder.tvAnswer.setText(s);
@@ -118,6 +139,12 @@ public class QuestionQuizAdapter extends RecyclerView.Adapter<QuestionQuizAdapte
         Spinner spAnswerList;
         @BindView(R.id.rvQuizzAnwerQuestion)
         RecyclerView rvQuizzAnwerQuestion;
+
+
+        @BindView(R.id.stateOK)
+        TextView stateOK;
+        @BindView(R.id.stateOFF)
+        TextView stateOFF;
 
         ViewHolder(View view) {
             super(view);

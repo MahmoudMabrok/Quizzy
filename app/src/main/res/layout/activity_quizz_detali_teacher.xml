@@ -4,35 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
-    android:background="#dd00ee"
     android:padding="@dimen/default16_margin"
     tools:context=".activity.AddEditQuiz">
 
-    <EditText
-        android:id="@+id/edQuizName"
+    <RelativeLayout
+        android:id="@+id/quizzAndAddLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/quiz_name" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edQuizName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/quiz_name"
+            android:minWidth="100dp"
+            android:textColorHint="#000000" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAddQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end|top"
+            android:layout_marginLeft="@dimen/default16_margin"
+            android:src="@drawable/add"
+            app:backgroundTint="@color/passed" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/questionContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default16_margin"
+        android:background="@drawable/item_back"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="Question List "
+        android:textSize="22sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvQustionListTeacher"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/default16_margin"
+        android:foregroundGravity="center_horizontal" />
 
     <Button
         android:id="@+id/btnSaveQuizz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/default16_margin"
+        android:background="@drawable/button"
         android:gravity="center"
         android:text="@string/add" />
 

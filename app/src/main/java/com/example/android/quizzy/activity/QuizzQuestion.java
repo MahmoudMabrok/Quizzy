@@ -5,12 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.adapter.QuestionQuizAdapter;
 import com.example.android.quizzy.api.DataRepo;
+import com.example.android.quizzy.model.AttemptedQuiz;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
@@ -41,36 +43,52 @@ public class QuizzQuestion extends AppCompatActivity {
 
 
     String sID;
+    String quizeID;
+    String teacher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz_question);
         ButterKnife.bind(this);
 
-/*
-        Bundle bundle = getIntent().getBundleExtra("quiz");
-        QuizSeriazle quizSeriazle = (QuizSeriazle) bundle.getSerializable("quiz");
-*/
-
         sID = getIntent().getStringExtra("sID");
-        String quizeID = getIntent().getStringExtra("id");
-        String teacher = getIntent().getStringExtra("teacher");
-
-        repo = new DataRepo();
-        repo.getSpecificQuizRef(teacher, quizeID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: " + dataSnapshot);
-                quiz = dataSnapshot.getValue(Quiz.class);
-                setQuestionList(quiz.getQuestionList());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        quizeID = getIntent().getStringExtra("id");
+        teacher = getIntent().getStringExtra("teacher");
         initRv();
+        repo = new DataRepo();
+
+        if (getIntent().getBooleanExtra("s", false) == false) { //case of new quizz (non-solved quizz)
+            repo.getSpecificQuizRef(teacher, quizeID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "LLL " + dataSnapshot);
+                    quiz = dataSnapshot.getValue(Quiz.class);
+                    setQuestionList(quiz.getQuestionList());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            repo.getStudentCompletedQuizz(teacher, sID, quizeID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    quiz = dataSnapshot.getValue(Quiz.class);
+                    Log.d(TAG, "onDataChange: " + dataSnapshot);
+                    adapter.setList(quiz.getQuestionList());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            quizzSubmit.setVisibility(View.GONE);
+        }
 
     }
 
@@ -116,11 +134,20 @@ public class QuizzQuestion extends AppCompatActivity {
         } else {
             quiz.setGrade(Constants.Excellent);
         }
-
         repo.addQuizTOCompleteList(quiz, sID);
+        //// TODO: 11/22/2018  attemped obj
+        AttemptedQuiz attemptedQuiz = new AttemptedQuiz();
+        attemptedQuiz.setStudentName("mahmoud");
+        attemptedQuiz.setQuestionArrayList(questionList);
+        attemptedQuiz.setPercentage(percentage);
+
+        repo.addAttemted(attemptedQuiz, quizeID, teacher);
 
         show("Quizz Solved ");
         finish();
+        overridePendingTransition(0, R.anim.slide_down); // animation with finish the activity
+
+
     }
 
     private void show(String quizz_solved_) {

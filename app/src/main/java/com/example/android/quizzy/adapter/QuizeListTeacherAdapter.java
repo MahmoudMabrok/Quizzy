@@ -49,7 +49,6 @@ public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeach
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Quiz quiz = quizList.get(position);
         holder.tvQuizName.setText(quiz.getName());
-        holder.tvQuizTeacherName.setText(quiz.getTeacherKey());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +65,6 @@ public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeach
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuizName)
         TextView tvQuizName;
-        @BindView(R.id.tvQuizTeacherName)
-        TextView tvQuizTeacherName;
 
         ViewHolder(View view) {
             super(view);

@@ -2,6 +2,7 @@ package com.example.android.quizzy.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
@@ -21,7 +26,6 @@ import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.fragment.QuestionAddFragment;
 import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
-import com.example.android.quizzy.model.QuestionToSerialize;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +55,10 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     RecyclerView rvQustionListTeacher;
     @BindView(R.id.btnSaveQuizz)
     Button btnSaveQuizz;
+    @BindView(R.id.fabAddQuestion)
+    FloatingActionButton fabAddQuestion;
+    @BindView(R.id.quizzAndAddLayout)
+    RelativeLayout quizzAndAddLayout;
 
     private List<Question> questionList = new ArrayList<>();
     private FragmentManager manager = getSupportFragmentManager();
@@ -62,11 +70,19 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
 
     private String quizzKey;
     private boolean isUpdate;
+
+
+    Animation animationDown;
+    Animation animationUP;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz_detali_teacher);
         ButterKnife.bind(this);
+
+        animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+        animationUP = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
         dataRepo = new DataRepo();
         Intent intent = getIntent();
@@ -76,6 +92,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
             if (quizzKey != null) {
                 isUpdate = true;
                 fetchQustionList();
+                btnSaveQuizz.setText(getResources().getText(R.string.update));
             }
         } else {
             finish();
@@ -86,6 +103,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     }
 
     private static final String TAG = "AddEditQuiz";
+
     private void fetchQustionList() {
         dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,9 +114,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
                 questionList = new ArrayList<>();
-                List<String> strings = new ArrayList<>();
+                //   List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
-                    QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
+                    //QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
                     question = snapshot.getValue(Question.class);
                     Log.d(TAG, "onDataChange: 2 " + snapshot);
                     if (question != null) {
@@ -152,7 +170,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int pos = viewHolder.getAdapterPosition();
                 Question question = questionList.get(pos);
-                if (direction == ItemTouchHelper.RIGHT) {
+                if (direction == ItemTouchHelper.RIGHT) { // update
                     adapter.remove(pos);
                     questionList.remove(pos);
                     replaceQuestionFragment(question);
@@ -173,6 +191,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         bundle.putString(Constants.question, question.getQuestion());
         fragment.setArguments(bundle);
         transaction.replace(R.id.questionContainer, fragment).commit();
+        setViewToAddOrUpdateQuestion();
     }
 
     @OnClick(R.id.btnSaveQuizz)
@@ -184,13 +203,16 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 quiz.setName(quizName);
                 quiz.setQuestionList(questionList);
                 quiz.setTeacherKey(teacherKey);
-                //// TODO: 10/23/2018 add weight/total score
                 if (isUpdate) {
                     quiz.setKey(quizzKey);
+                    show("updated");
+                } else {
+                    show("added");
                 }
                 dataRepo.addQuiz(quiz);
-                show("added");
-                blankFields();
+                // blankFields();
+                finish();
+                overridePendingTransition(0, R.anim.slide_down);
             } else {
                 show("Please add Question");
             }
@@ -209,12 +231,52 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         Toast.makeText(this, a, Toast.LENGTH_SHORT).show();
     }
 
+
+    /**
+     * when add fragment finish and sent the Question
+     * hidden it
+     *
+     * @param question
+     */
     @Override
     public void onQuestionAdd(Question question) {
         if (question.getAnswerList().size() > 0) {
             questionList.add(question);
             adapter.addQuestion(question);
+            //make animation with gone visibility
+            setViewAfterAddQuestion();
         }
     }
 
+    private void setViewAfterAddQuestion() {
+        questionContainer.setVisibility(View.GONE);
+        animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+        questionContainer.setAnimation(animationDown);
+
+        quizzAndAddLayout.setVisibility(View.VISIBLE);
+        animationUP = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        quizzAndAddLayout.setAnimation(animationUP);
+
+    }
+
+    @OnClick(R.id.fabAddQuestion)
+    public void onViewClicked11() {
+        setViewToAddOrUpdateQuestion();
+    }
+
+    /**
+     * used to make an animation  when call addQuestion Fragment in case of add or update
+     * it first hide quize name and button layout and then show fragment
+     */
+    private void setViewToAddOrUpdateQuestion() {
+        //make animation with gone visibility
+        questionContainer.setVisibility(View.VISIBLE);
+        animationUP = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        questionContainer.setAnimation(animationUP);
+
+        quizzAndAddLayout.setVisibility(View.GONE);
+        animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+        quizzAndAddLayout.setAnimation(animationDown);
+
+    }
 }

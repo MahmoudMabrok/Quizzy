@@ -51,6 +51,7 @@ public class StudentActivity extends AppCompatActivity
 
     private void openQuizzListFragment() {
         transition = manager.beginTransaction();
+        transition.setCustomAnimations(R.anim.slide_up, 0);
         student_quiz_list teacher = new student_quiz_list();
         transition.replace(R.id.containerStudent, teacher).commit();
 

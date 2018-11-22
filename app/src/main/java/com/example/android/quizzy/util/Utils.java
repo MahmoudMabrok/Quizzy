@@ -3,7 +3,9 @@ package com.example.android.quizzy.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 
 public class Utils {
 
@@ -48,6 +50,10 @@ public class Utils {
         return true;
     }
 
+    public static void hideInputKeyboard(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
     /**
      * Checks if telephoneNumber is valid(consists of only numbers)
      */

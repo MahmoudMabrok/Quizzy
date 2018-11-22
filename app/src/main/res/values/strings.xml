@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Quizzy</string>
+    <string name="app_name">Evology</string>
     <string name="teacher">Teacher</string>
     <string name="student">Student</string>
     <string name="login">Login</string>
@@ -46,7 +46,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add">add</string>
     <string name="quiz_name">Quiz Name</string>
-    <string name="no_data_found">No Data Found ☹☹☹☹☹</string>
+    <string name="no_data_found">No Quizz Found ☹☹☹☹☹</string>
     <string name="title_activity_student">StudentActivity</string>
     <string name="signout">Sign Out</string>
+    <string name="update">Update</string>
 </resources>

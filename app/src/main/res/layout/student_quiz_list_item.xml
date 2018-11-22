@@ -46,6 +46,7 @@
             android:id="@+id/piStudent"
             android:layout_width="75dp"
             android:layout_height="60dp"
+            android:visibility="gone"
             app:inner_pie_padding="2"
             app:percentage="25" />
 

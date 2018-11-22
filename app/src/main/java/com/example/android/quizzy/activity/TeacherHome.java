@@ -71,6 +71,16 @@ public class TeacherHome extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         openQuizzListFragment();
+
+/*
+
+        // inside your activity (if you did not enable transitions in your theme)
+       getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        // set an exit transition
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(new Explode());
+        }
+*/
     }
 
     @Override
@@ -106,6 +116,7 @@ public class TeacherHome extends AppCompatActivity
 
     private void openQuizzListFragment() {
         transition = manager.beginTransaction();
+        transition.setCustomAnimations(R.anim.slide_up, 0);
         QuizzListTeacher teacher = new QuizzListTeacher();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TEACHERS_KEY, key);

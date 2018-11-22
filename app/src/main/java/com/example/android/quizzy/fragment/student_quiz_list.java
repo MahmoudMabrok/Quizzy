@@ -67,10 +67,9 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         //// TODO: 11/17/2018  get id from Auth
         //String studentUUID = dataRepo.getUUID();
         studentUUID = "-mahmoud";
-        Log.d(TAG, "id " + studentUUID);
-
-        retriveCompletedList(studentUUID);
+        Log.d(TAG, "id " + studentUUID + " teacher " + teacherID);
         initRv();
+        retriveCompletedList(studentUUID);
         retriveQuizzList(teacherID);
 
         return view;
@@ -157,8 +156,14 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         Bundle bundle = new Bundle();
         bundle.putSerializable("quiz" ,quizSeriazle );
         intent.putExtra("quiz" , bundle);*/
+
         intent.putExtra("sID", studentUUID);
         intent.putExtra("id", quiz.getKey());
+        if (quiz.getQuestionList().get(0).getStudentAnswer() != null) {
+            show("Completed ");
+            intent.putExtra("s", true);
+
+        }
         intent.putExtra("teacher", teacherID);
         getContext().startActivity(intent);
     }

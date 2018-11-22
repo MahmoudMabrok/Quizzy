@@ -19,6 +19,7 @@ import com.example.android.quizzy.activity.AddEditQuiz;
 import com.example.android.quizzy.adapter.AnwerListAddQuizAdapter;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.util.Constants;
+import com.example.android.quizzy.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class QuestionAddFragment extends Fragment {
             adapter.add(anser);
             answerList.add(anser);
             edAnswerAddFragment.setText("");
-
+            Utils.hideInputKeyboard(getContext());
         } else {
             show("Enter Answer");
         }
@@ -146,14 +147,20 @@ public class QuestionAddFragment extends Fragment {
                 Question question = new Question();
                 question.setQuestion(questionName);
                 question.setAnswerList(answerList);
-                if (adapter.getCheckedList().size() > 0) {
-                    question.setCorrectAnswer(adapter.getCheckedList().get(0));
+                if (!adapter.getCorrect().equals("")) {
+                    question.setCorrectAnswer(adapter.getCorrect());
                 }
                 question.setWeight(1);
-                addQuestion(question);
-                blankFields();
+                if (question.getCorrectAnswer() != null && question.getCorrectAnswer().length() > 1) {
+                    addQuestion(question);
+                    blankFields();
+                } else {
+                    show("select an Correct Answer");
+                    return;
+                }
             } else {
                 show("Add Answers");
+                return;
             }
         } else {
             show("Add Question Name");
@@ -164,7 +171,7 @@ public class QuestionAddFragment extends Fragment {
         if (question != null && question.getAnswerList().size() > 0) {
             ((AddEditQuiz) getActivity()).onQuestionAdd(question);
         } else {
-            show("aaa");
+            show("Error");
         }
     }
 

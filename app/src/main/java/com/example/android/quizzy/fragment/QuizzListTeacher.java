@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.activity.AddEditQuiz;
@@ -141,9 +140,16 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
 
     @OnClick(R.id.fabAddQuizz)
     public void onViewClicked() {
-        Toast.makeText(getContext(), "qqq", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getContext(), AddEditQuiz.class);
         intent.putExtra("t_key", teacherKey);
         startActivity(intent);
+      /*  // Check if we're running on Android 5.0 or higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(intent,  ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+        } else {
+            startActivity(intent );
+        }*/
+
+
     }
 }

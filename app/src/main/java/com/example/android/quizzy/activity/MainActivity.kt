@@ -12,10 +12,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //check if user logged or still needs
+        /*//check if user logged or still needs
         if (FirebaseAuth.getInstance().currentUser == null) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             startActivity(intent)
-        }
+        }*/
+
+        val intent = Intent(this, StudentActivity::class.java)
+        startActivity(intent);
     }
 }
