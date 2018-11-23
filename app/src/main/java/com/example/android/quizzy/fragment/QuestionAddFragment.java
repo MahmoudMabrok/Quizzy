@@ -147,11 +147,9 @@ public class QuestionAddFragment extends Fragment {
                 Question question = new Question();
                 question.setQuestion(questionName);
                 question.setAnswerList(answerList);
-                if (!adapter.getCorrect().equals("")) {
-                    question.setCorrectAnswer(adapter.getCorrect());
-                }
                 question.setWeight(1);
-                if (question.getCorrectAnswer() != null && question.getCorrectAnswer().length() > 1) {
+                if (adapter.getCorrect() != null) {
+                    question.setCorrectAnswer(adapter.getCorrect());
                     addQuestion(question);
                     blankFields();
                 } else {
@@ -179,5 +177,17 @@ public class QuestionAddFragment extends Fragment {
         edQuestionAddFragment.setText("");
         adapter.deleteAll();
         answerList.clear();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        show("pause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        show("stop");
     }
 }

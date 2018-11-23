@@ -1,6 +1,7 @@
 package com.example.android.quizzy.api;
 
 import com.example.android.quizzy.model.AttemptedQuiz;
+import com.example.android.quizzy.model.NotifactionItem;
 import com.example.android.quizzy.model.Quiz;
 import com.google.firebase.database.DatabaseReference;
 
@@ -40,5 +41,24 @@ public class DataRepo {
 
     public void addAttemted(AttemptedQuiz attemptedQuiz, String quizeID, String teacher) {
         firebaseDataSource.addAttemted(attemptedQuiz, quizeID, teacher);
+    }
+
+    public DatabaseReference getStudentName(String studentUUID, String teacherUUID) {
+        return firebaseDataSource.getStudentName(studentUUID, teacherUUID);
+    }
+
+    public DatabaseReference getNotificationRef(String uuid) {
+        return firebaseDataSource.getNotifcationRef(uuid).getRef();
+    }
+
+    public void addNotification(String teacherUUID, NotifactionItem notifactionItem) {
+        firebaseDataSource.addNotification(teacherUUID, notifactionItem);
+    }
+
+    public void addNotification(NotifactionItem notifactionItem) {
+    }
+
+    public DatabaseReference getTeacherQuizz(String teacherKey) {
+        return firebaseDataSource.getTeacherQuizz(teacherKey);
     }
 }

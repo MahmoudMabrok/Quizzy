@@ -42,6 +42,7 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
     private String teacherID;
     private List<Quiz> completedList = new ArrayList<>();
     private List<Quiz> quizList = new ArrayList<>();
+    private String studentName;
 
     public student_quiz_list() {
         // Required empty public constructor
@@ -53,6 +54,9 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         teacherID = "0114919427";
         if (getArguments() != null) {
             teacherID = getArguments().getString(Constants.TEACHERS_KEY);
+            show("t_id " + teacherID);
+            studentName = getArguments().getString(Constants.STUDENT_NAME);
+            show("s_name " + studentName);
         }
     }
 
@@ -64,9 +68,9 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_student_quiz_list, container, false);
         unbinder = ButterKnife.bind(this, view);
-        //// TODO: 11/17/2018  get id from Auth
-        //String studentUUID = dataRepo.getUUID();
+        // studentUUID = dataRepo.getUUID();
         studentUUID = "-mahmoud";
+
         Log.d(TAG, "id " + studentUUID + " teacher " + teacherID);
         initRv();
         retriveCompletedList(studentUUID);
@@ -150,12 +154,6 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
     @Override
     public void onQuizzClick(Quiz quiz) {
         Intent intent = new Intent(getContext(), QuizzQuestion.class);
-       /* QuizSeriazle quizSeriazle =
-                new QuizSeriazle(quiz.getKey() , quiz.getName() , quiz.getCreatorName() ,
-                        quiz.getTeacherKey() , quiz.getQuestionList() , quiz.getScore());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("quiz" ,quizSeriazle );
-        intent.putExtra("quiz" , bundle);*/
 
         intent.putExtra("sID", studentUUID);
         intent.putExtra("id", quiz.getKey());
@@ -164,7 +162,9 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
             intent.putExtra("s", true);
 
         }
-        intent.putExtra("teacher", teacherID);
+        intent.putExtra(Constants.STUDENT_NAME, studentName);
+        show("in intent " + studentName);
+        intent.putExtra(Constants.TEACHERS_KEY, teacherID);
         getContext().startActivity(intent);
     }
 

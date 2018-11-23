@@ -105,7 +105,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     private static final String TAG = "AddEditQuiz";
 
     private void fetchQustionList() {
-        dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addValueEventListener(new ValueEventListener() {
+        dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = (String) dataSnapshot.child("name").getValue();

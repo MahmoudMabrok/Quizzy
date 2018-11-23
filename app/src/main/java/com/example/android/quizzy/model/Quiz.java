@@ -3,6 +3,7 @@ package com.example.android.quizzy.model;
 import android.support.annotation.Keep;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public class Quiz {
     private int grade;
     public Quiz() {
     }
+
 
     public Quiz(String name, String creatorName) {
         this.name = name;

@@ -37,12 +37,15 @@ public interface Constants {
 
     String COMPLETED_QUIZZ = "completed";
 
-
     int Excellent = 4;
     int VGOOD = 3;
     int GOOD = 2;
     int ACCEPT = 1;
     int FAILED = 0;
+    String[] gradesAsString = new String[]{"FAILED", "ACCEPT", "GOOD", "VGOOD", "Excellent"};
 
-
+    String NOTIFICATION = "notification";
+    String AttemptedList = "AttemptedList";
+    String STUDENT_NAME = "STUDENT_NAME";
+    String QUIZZ_NAME = "name";
 }

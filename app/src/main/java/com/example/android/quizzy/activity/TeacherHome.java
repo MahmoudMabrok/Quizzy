@@ -9,11 +9,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.fragment.NotificationFragment;
 import com.example.android.quizzy.fragment.QuizzListTeacher;
+import com.example.android.quizzy.fragment.ReportsTeacherFragment;
 import com.example.android.quizzy.util.Constants;
 
 import butterknife.BindView;
@@ -53,11 +57,18 @@ public class TeacherHome extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private static final String TAG = "TeacherHome";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_home);
         ButterKnife.bind(this);
+
+
+        key = getIntent().getStringExtra(Constants.TEACHERS_KEY);
+        Log.d(TAG, "onCreate: " + key);
+        //depo.getuuid();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,18 +80,8 @@ public class TeacherHome extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         openQuizzListFragment();
 
-/*
-
-        // inside your activity (if you did not enable transitions in your theme)
-       getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        // set an exit transition
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setExitTransition(new Explode());
-        }
-*/
     }
 
     @Override
@@ -108,10 +109,25 @@ public class TeacherHome extends AppCompatActivity
                 openReports();
                 break;
 
+            case R.id.nav_notification:
+                openNotification();
+                break;
+
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openNotification() {
+        transition = manager.beginTransaction();
+        transition.setCustomAnimations(R.anim.slide_up, 0);
+        NotificationFragment teacher = new NotificationFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.TEACHERS_KEY, key);
+        teacher.setArguments(bundle);
+
+        transition.replace(R.id.container, teacher).commit();
     }
 
     private void openQuizzListFragment() {
@@ -127,6 +143,12 @@ public class TeacherHome extends AppCompatActivity
 
     private void openReports() {
         transition = manager.beginTransaction();
+        transition.setCustomAnimations(R.anim.slide_up, 0);
+        ReportsTeacherFragment teacher = new ReportsTeacherFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.TEACHERS_KEY, key);
+        teacher.setArguments(bundle);
+        transition.replace(R.id.container, teacher).commit();
     }
 
 

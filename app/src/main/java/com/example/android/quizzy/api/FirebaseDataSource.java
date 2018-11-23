@@ -1,6 +1,7 @@
 package com.example.android.quizzy.api;
 
 import com.example.android.quizzy.model.AttemptedQuiz;
+import com.example.android.quizzy.model.NotifactionItem;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +32,8 @@ public class FirebaseDataSource {
     }
 
     public String getCurrentUserUUID() {
-        return auth.getCurrentUser().getUid();
+        return "0114919427";
+        // return auth.getCurrentUser().getUid();
     }
 
 
@@ -75,6 +77,24 @@ public class FirebaseDataSource {
     }
 
     public void addAttemted(AttemptedQuiz attemptedQuiz, String quizeID, String teacher) {
-        teacherRef.child(teacher).child(Constants.QUIZZ_CHILD).child(quizeID).child("AttemptedList").push().setValue(attemptedQuiz);
+        teacherRef.child(teacher).child(Constants.QUIZZ_CHILD).child(quizeID).child(Constants.AttemptedList).push().setValue(attemptedQuiz);
+    }
+
+
+    public DatabaseReference getStudentName(String studentUUID, String teacherUUID) {
+        return teacherRef.child(teacherUUID).child(Constants.STUDENTS_KEY).child(studentUUID).child("name").getRef();
+    }
+
+
+    public void addNotification(String teacherUUID, NotifactionItem item) {
+        teacherRef.child(teacherUUID).child(Constants.NOTIFICATION).push().setValue(item);
+    }
+
+    public DatabaseReference getNotifcationRef(String teacherUUID) {
+        return teacherRef.child(teacherUUID).child(Constants.NOTIFICATION).getRef();
+    }
+
+    public DatabaseReference getTeacherQuizz(String teacherKey) {
+        return teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).getRef();
     }
 }

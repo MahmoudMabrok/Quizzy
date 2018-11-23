@@ -23,7 +23,7 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
 
     private List<String> anserList;
     private List<String> checkedList;
-    private String correct = new String("");
+    private String correct;
 
     public AnwerListAddQuizAdapter() {
         anserList = new ArrayList<>();

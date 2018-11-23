@@ -13,6 +13,7 @@ import com.example.android.quizzy.R;
 import com.example.android.quizzy.adapter.QuestionQuizAdapter;
 import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.model.AttemptedQuiz;
+import com.example.android.quizzy.model.NotifactionItem;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
@@ -45,6 +46,7 @@ public class QuizzQuestion extends AppCompatActivity {
     String sID;
     String quizeID;
     String teacher;
+    String studentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +56,13 @@ public class QuizzQuestion extends AppCompatActivity {
 
         sID = getIntent().getStringExtra("sID");
         quizeID = getIntent().getStringExtra("id");
-        teacher = getIntent().getStringExtra("teacher");
+        teacher = getIntent().getStringExtra(Constants.TEACHERS_KEY);
+        studentName = getIntent().getStringExtra(Constants.STUDENT_NAME);
+        show("student name " + studentName);
         initRv();
         repo = new DataRepo();
 
-        if (getIntent().getBooleanExtra("s", false) == false) { //case of new quizz (non-solved quizz)
+        if (!getIntent().getBooleanExtra("s", false)) { //case of new quizz (non-solved quizz)
             repo.getSpecificQuizRef(teacher, quizeID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -107,6 +111,16 @@ public class QuizzQuestion extends AppCompatActivity {
 
     @OnClick(R.id.quizzSubmit)
     public void onViewClicked() {
+        AttemptedQuiz attemptedQuiz = new AttemptedQuiz();
+        NotifactionItem notifactionItem = new NotifactionItem();
+        notifactionItem.setQuizzName(quiz.getName());
+        /*notifactionItem.setStudentName(StudentActivity.studentName);
+        notifactionItem.setStudentID(StudentActivity.studentID);
+        */
+
+        notifactionItem.setQuizzID(quizeID);
+
+
         List<Question> questionList = adapter.getList();
         int score = 0;
         for (Question question : questionList) {
@@ -123,25 +137,39 @@ public class QuizzQuestion extends AppCompatActivity {
         quiz.setScore(score);
         int percentage = (score / quiz.getQuestionList().size()) * 100;
         quiz.setPercentage(percentage);
+
         if (percentage < 50) {
             quiz.setGrade(Constants.FAILED);
+            attemptedQuiz.setGrade(Constants.FAILED);
+            notifactionItem.setGrade(Constants.FAILED);
         } else if (percentage < 65) {
             quiz.setGrade(Constants.ACCEPT);
+            attemptedQuiz.setGrade(Constants.ACCEPT);
+            notifactionItem.setGrade(Constants.ACCEPT);
         } else if (percentage < 75) {
             quiz.setGrade(Constants.GOOD);
+            attemptedQuiz.setGrade(Constants.GOOD);
+            notifactionItem.setGrade(Constants.GOOD);
         } else if (percentage < 85) {
             quiz.setGrade(Constants.VGOOD);
+            attemptedQuiz.setGrade(Constants.VGOOD);
+            notifactionItem.setGrade(Constants.VGOOD);
         } else {
             quiz.setGrade(Constants.Excellent);
+            attemptedQuiz.setGrade(Constants.Excellent);
+            notifactionItem.setGrade(Constants.Excellent);
         }
-        repo.addQuizTOCompleteList(quiz, sID);
-        //// TODO: 11/22/2018  attemped obj
-        AttemptedQuiz attemptedQuiz = new AttemptedQuiz();
+
+        if (percentage >= 50) {
+            attemptedQuiz.setState(true);
+        }
+
         attemptedQuiz.setStudentName("mahmoud");
         attemptedQuiz.setQuestionArrayList(questionList);
-        attemptedQuiz.setPercentage(percentage);
 
+        repo.addQuizTOCompleteList(quiz, sID);
         repo.addAttemted(attemptedQuiz, quizeID, teacher);
+        repo.addNotification(teacher, notifactionItem);
 
         show("Quizz Solved ");
         finish();

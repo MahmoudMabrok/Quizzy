@@ -1,20 +1,30 @@
 package com.example.android.quizzy.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.fragment.StudentReports;
 import com.example.android.quizzy.fragment.student_quiz_list;
+import com.example.android.quizzy.util.Constants;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,37 +32,76 @@ import butterknife.ButterKnife;
 public class StudentActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public String studentID = "-mahmoud";
     @BindView(R.id.containerStudent)
     FrameLayout containerStudent;
-    android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-    private android.support.v4.app.FragmentTransaction transition;
+    FragmentManager manager = getSupportFragmentManager();
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.nav_view)
+    NavigationView navView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    private FragmentTransaction transition;
+
+    private DataRepo repo = new DataRepo();
+    public String studentName;
+    public String teacherUUID;
+
+    private static final String TAG = "StudentActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //uuid from firebase
-        //teacher id from firebase
+        Intent intent = getIntent();
+        teacherUUID = intent.getStringExtra(Constants.TEACHERS_KEY);
+        if (teacherUUID != null) {
+            show("tid " + teacherUUID);
+            // studentID = repo.getUUID();
+            studentID = "-mahmoud";
+            repo.getStudentName(studentID, teacherUUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    show("" + dataSnapshot);
+                    studentName = (String) dataSnapshot.getValue();
+                    Log.d(TAG, dataSnapshot + " onDataChange: " + studentName);
+                    show("s_name " + studentName);
+                    openQuizzListFragment();
+                }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        openQuizzListFragment();
+        navView.setNavigationItemSelectedListener(this);
+
+    }
+
+    private void show(String studentName) {
+        Toast.makeText(this, studentName, Toast.LENGTH_SHORT).show();
     }
 
     private void openQuizzListFragment() {
         transition = manager.beginTransaction();
         transition.setCustomAnimations(R.anim.slide_up, 0);
         student_quiz_list teacher = new student_quiz_list();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.STUDENT_NAME, studentName);
+        bundle.putString(Constants.TEACHERS_KEY, teacherUUID);
+        teacher.setArguments(bundle);
         transition.replace(R.id.containerStudent, teacher).commit();
 
     }
@@ -60,9 +109,8 @@ public class StudentActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -85,6 +133,9 @@ public class StudentActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             FirebaseAuth.getInstance().signOut();
+            // teacherUUID = "0114919427";
+            studentID = "-mahmoud";
+            repo.getCompleteListRef(teacherUUID, studentID).removeValue();
         }
 
         return super.onOptionsItemSelected(item);
@@ -97,7 +148,22 @@ public class StudentActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_quiz:
-                openQuizzListFragment();
+                repo.getStudentName(studentID, teacherUUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        show("" + dataSnapshot);
+                        studentName = (String) dataSnapshot.getValue();
+                        Log.d(TAG, dataSnapshot + " onDataChange: " + studentName);
+                        show("s_name " + studentName);
+                        openQuizzListFragment();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 break;
 
             case R.id.nav_reorts:

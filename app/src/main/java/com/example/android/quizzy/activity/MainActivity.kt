@@ -18,7 +18,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }*/
 
-        val intent = Intent(this, StudentActivity::class.java)
+        val intent = Intent(this, TeacherHome::class.java)
+
         startActivity(intent);
     }
 }

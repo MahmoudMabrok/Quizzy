@@ -8,11 +8,19 @@ import java.util.List;
 public class AttemptedQuiz {
     boolean state;
     private String studentName;
-    private int percentage;
+    private int grade;
     private List<Question> questionArrayList;
 
 
     public AttemptedQuiz() {
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 
     public String getStudentName() {
@@ -23,20 +31,12 @@ public class AttemptedQuiz {
         this.studentName = studentName;
     }
 
-    public int getPercentage() {
-        return percentage;
+    public int getGrade() {
+        return grade;
     }
 
-    public void setPercentage(int percentage) {
-        this.percentage = percentage;
-    }
-
-    public boolean isState() {
-        return state;
-    }
-
-    public void setState(boolean state) {
-        this.state = state;
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 
     public List<Question> getQuestionArrayList() {
