@@ -97,4 +97,8 @@ public class FirebaseDataSource {
     public DatabaseReference getTeacherQuizz(String teacherKey) {
         return teacherRef.child(teacherKey).child(Constants.QUIZZ_CHILD).getRef();
     }
+
+    public DatabaseReference getStudentOfTeacherRef(String teacherKey) {
+        return teacherRef.child(teacherKey).child(Constants.STUDENTS_KEY).getRef();
+    }
 }

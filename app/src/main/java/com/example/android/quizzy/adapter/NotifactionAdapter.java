@@ -40,10 +40,11 @@ public class NotifactionAdapter extends RecyclerView.Adapter<NotifactionAdapter.
         final NotifactionItem notifactionItem = NotificationList.get(position);
         StringBuilder builder = new StringBuilder();
         builder.append(notifactionItem.getStudentName());
-        builder.append("has solved Quizz (");
+        builder.append(" has solved  ");
         builder.append(notifactionItem.getQuizzName());
-        builder.append(") ");
+        builder.append("  ");
         builder.append("with Grade ");
+
         builder.append(Constants.gradesAsString[notifactionItem.getGrade()]);
         holder.tvNotification.setText(builder.toString());
 

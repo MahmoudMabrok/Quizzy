@@ -114,12 +114,9 @@ public class QuizzQuestion extends AppCompatActivity {
         AttemptedQuiz attemptedQuiz = new AttemptedQuiz();
         NotifactionItem notifactionItem = new NotifactionItem();
         notifactionItem.setQuizzName(quiz.getName());
-        /*notifactionItem.setStudentName(StudentActivity.studentName);
-        notifactionItem.setStudentID(StudentActivity.studentID);
-        */
 
         notifactionItem.setQuizzID(quizeID);
-
+        notifactionItem.setStudentName(studentName);
 
         List<Question> questionList = adapter.getList();
         int score = 0;
@@ -164,7 +161,7 @@ public class QuizzQuestion extends AppCompatActivity {
             attemptedQuiz.setState(true);
         }
 
-        attemptedQuiz.setStudentName("mahmoud");
+        attemptedQuiz.setStudentName(studentName);
         attemptedQuiz.setQuestionArrayList(questionList);
 
         repo.addQuizTOCompleteList(quiz, sID);
@@ -173,7 +170,7 @@ public class QuizzQuestion extends AppCompatActivity {
 
         show("Quizz Solved ");
         finish();
-        overridePendingTransition(0, R.anim.slide_down); // animation with finish the activity
+        overridePendingTransition(R.anim.slide_up, R.anim.slide_down); // animation with finish the activity
 
 
     }

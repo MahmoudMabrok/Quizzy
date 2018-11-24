@@ -61,4 +61,8 @@ public class DataRepo {
     public DatabaseReference getTeacherQuizz(String teacherKey) {
         return firebaseDataSource.getTeacherQuizz(teacherKey);
     }
+
+    public DatabaseReference getStudentOfTeacherRef(String teacherKey) {
+        return firebaseDataSource.getStudentOfTeacherRef(teacherKey);
+    }
 }

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/default16_margin"
     android:alpha="90"
-    android:background="#ffffff"
+    android:background="@drawable/quizz_back"
     android:orientation="vertical"
     android:padding="16dp">
 

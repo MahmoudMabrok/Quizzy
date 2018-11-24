@@ -66,7 +66,7 @@ public class StudentReports extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         dataRepo = new DataRepo();
         retriveQuizzList("0114919427");
-        retriveCompletedList("-mahmoud");
+        retriveCompletedList("0");
 
         Log.d(TAG, "onCreateView: ");
         computeDistributionQuizzes();

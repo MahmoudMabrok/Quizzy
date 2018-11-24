@@ -69,11 +69,10 @@ public class QuestionQuizAdapter extends RecyclerView.Adapter<QuestionQuizAdapte
         String answer = question.getStudentAnswer();
         Log.d(TAG, "onBindViewHolder: " + answer);
         if (answer != null) {
-            int pos = questionList.indexOf(answer);
-            Log.d(TAG, "onBindViewHolder: " + pos);
+            int pos = question.getAnswerList().indexOf(answer);
+            Log.d(TAG, "onBindViewHolder:  pos" + pos);
             holder.spAnswerList.setSelection(pos);
 
-            //// TODO: 11/22/2018 state  icon or color
             if (question.getCorrectAnswer().equals(answer)) {
                 holder.stateOK.setVisibility(View.VISIBLE);
                 holder.stateOFF.setVisibility(View.GONE);

@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 public class StudentActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public String studentID = "-mahmoud";
+    public String studentID = "1";
     @BindView(R.id.containerStudent)
     FrameLayout containerStudent;
     FragmentManager manager = getSupportFragmentManager();
@@ -62,14 +62,14 @@ public class StudentActivity extends AppCompatActivity
         if (teacherUUID != null) {
             show("tid " + teacherUUID);
             // studentID = repo.getUUID();
-            studentID = "-mahmoud";
+            studentID = "1";
             repo.getStudentName(studentID, teacherUUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     show("" + dataSnapshot);
                     studentName = (String) dataSnapshot.getValue();
                     Log.d(TAG, dataSnapshot + " onDataChange: " + studentName);
-                    show("s_name " + studentName);
+                    show("student_name " + studentName);
                     openQuizzListFragment();
                 }
 
@@ -134,7 +134,7 @@ public class StudentActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             FirebaseAuth.getInstance().signOut();
             // teacherUUID = "0114919427";
-            studentID = "-mahmoud";
+            studentID = "1";
             repo.getCompleteListRef(teacherUUID, studentID).removeValue();
         }
 
@@ -148,22 +148,7 @@ public class StudentActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_quiz:
-                repo.getStudentName(studentID, teacherUUID).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        show("" + dataSnapshot);
-                        studentName = (String) dataSnapshot.getValue();
-                        Log.d(TAG, dataSnapshot + " onDataChange: " + studentName);
-                        show("s_name " + studentName);
-                        openQuizzListFragment();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
+                openQuizzListFragment();
                 break;
 
             case R.id.nav_reorts:
