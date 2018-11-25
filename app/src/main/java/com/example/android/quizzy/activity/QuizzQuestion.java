@@ -119,7 +119,7 @@ public class QuizzQuestion extends AppCompatActivity {
         notifactionItem.setStudentName(studentName);
 
         List<Question> questionList = adapter.getList();
-        int score = 0;
+        float score = 0;
         for (Question question : questionList) {
             Log.d(TAG, "onViewClicked: 1 " + question.getStudentAnswer());
             Log.d(TAG, "onViewClicked: 2 " + question.getCorrectAnswer());
@@ -131,9 +131,11 @@ public class QuizzQuestion extends AppCompatActivity {
         Log.d(TAG, "score: " + score);
 
         quiz.setQuestionList(questionList);
-        quiz.setScore(score);
-        int percentage = (score / quiz.getQuestionList().size()) * 100;
-        quiz.setPercentage(percentage);
+        quiz.setScore((int) score);
+        double percentage = (score / quiz.getQuestionList().size() * 1.0) * 100;
+        Log.d(TAG, "score : " + percentage);
+        show("percentage " + percentage);
+        quiz.setPercentage((int) percentage);
 
         if (percentage < 50) {
             quiz.setGrade(Constants.FAILED);

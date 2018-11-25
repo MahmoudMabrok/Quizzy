@@ -1,16 +1,30 @@
 package com.example.android.quizzy.util;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+
+import com.example.android.quizzy.R;
 
 public class Utils {
 
     private final static String TAG = "Utils";
 
+
+    /*public static AlertDialog getDialog(Context context, String message, String title) {
+        View view = LayoutInflater.from(context).inflate(R.layout.custome_dialoge_title , null) ;
+        TextView textView = view.findViewById(R.id.tvDialogeText);
+        textView.setText(message);
+        return new AlertDialog.Builder(context).setView(view).create();
+    }
+    */
     /**
      * checks if the device is connected to the internet or not
      *

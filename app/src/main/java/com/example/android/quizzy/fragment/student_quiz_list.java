@@ -69,7 +69,7 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         View view = inflater.inflate(R.layout.fragment_student_quiz_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         // studentUUID = dataRepo.getUUID();
-        studentUUID = "1";
+        studentUUID = "0";
 
         Log.d(TAG, "id " + studentUUID + " teacher " + teacherID);
         initRv();

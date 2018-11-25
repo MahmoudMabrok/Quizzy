@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.api.DataRepo;
@@ -23,6 +24,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,10 +57,17 @@ public class StudentReports extends Fragment {
     private DataRepo dataRepo;
     private ArrayList<Quiz> quizList = new ArrayList<>();
 
+    private static String studentName;
     public StudentReports() {
         // Required empty public constructor
+        EventBus.getDefault().register(this);
     }
 
+    @Subscribe
+    public void onEvent(String name) {
+        studentName = name;
+        Log.d(TAG, "onEvent: " + name);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,12 +77,10 @@ public class StudentReports extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         dataRepo = new DataRepo();
         retriveQuizzList("0114919427");
-        retriveCompletedList("0");
+        retriveCompletedList("1");
 
+        Toast.makeText(getContext(), studentName, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onCreateView: ");
-        computeDistributionQuizzes();
-        computeDistributionGrades();
-        comptueParamter();
 
         return view;
     }
@@ -201,7 +210,7 @@ public class StudentReports extends Fragment {
         String[] labels = new String[]{"Success", "Failed", "Not Attemped"};
         int success = 0, falid = 0, na;
         for (Quiz quiz : completedList) {
-            if (quiz.getScore() >= quiz.getQuestionList().size() / 2)
+            if (quiz.getGrade() > Constants.FAILED)
                 success++;
             else
                 falid++;

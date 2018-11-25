@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.interfaces.OnQuizzClick;
 import com.example.android.quizzy.model.Quiz;
+import com.example.android.quizzy.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+
+        holder.tvQuizState.setText("Not Attempted"); //in case of deleted items and re-binded
         Quiz quiz = quizList.get(position);
         holder.tvQuizName.setText(quiz.getName());
         holder.tvQuizTeacherName.setText(quiz.getTeacherKey());
@@ -63,7 +66,7 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
             text = (temp.getScore()) + " / " + temp.getQuestionList().size();
             holder.tvQuizTotalScore.setText(text);
             holder.piStudent.setPercentage(temp.getPercentage());
-            if (temp.getScore() <= (temp.getQuestionList().size()) / 2) {
+            if (temp.getGrade() == Constants.FAILED) {
                 holder.tvQuizState.setTextColor(Color.YELLOW);
                 holder.tvQuizState.setBackgroundColor(Color.RED);
                 holder.tvQuizState.setText("Failed");

@@ -18,6 +18,7 @@ import com.example.android.quizzy.adapter.ReportQuizzesTeacherAdapter;
 import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.model.AttemptedQuiz;
 import com.example.android.quizzy.model.Data;
+import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.model.ReportQuizzItem;
 import com.example.android.quizzy.util.Constants;
 import com.github.mikephil.charting.charts.BarChart;
@@ -31,6 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -169,16 +172,31 @@ public class ReportsTeacherFragment extends Fragment {
         }*/
         int fails = 0, success = 0, na = 0;
         int xValue = 1;
+
+        HashMap<Integer, StringBuilder> grades;
         // (1) -> analysis data and get Entries
         for (Data data : dataList) { //for each quizz
             fails = success = na = 0;
+            grades = new HashMap<>();
             for (AttemptedQuiz attemptedQuiz : data.getAttemptedQuizList()) { //for each attemp (student solution)
+                if (grades.containsKey(attemptedQuiz.getGrade())) {
+                    StringBuilder builder = grades.get(attemptedQuiz.getGrade()).append("\n").append(attemptedQuiz.getStudentName());
+                    grades.put(attemptedQuiz.getGrade(), builder);
+                } else {
+                    grades.put(attemptedQuiz.getGrade(), new StringBuilder(attemptedQuiz.getStudentName()));
+                }
                 if (attemptedQuiz.getGrade() > Constants.FAILED) {
                     success++;
                 } else {
                     fails++;
                 }
             }
+         /*   int max = Collections.max(grades.keySet());
+            show("" + max);
+
+            if (max >= 0 ){
+
+            }*/
             na = (int) (totalStudentNumber - (fails + success));
             na = na >= 0 ? na : 0;
 /*
@@ -238,6 +256,75 @@ public class ReportsTeacherFragment extends Fragment {
     }
 
     private void startStudnetAnalysis() {
+        show("n quizzes " + n_quizzes);
+        retrieveCompleteList();
+    }
+
+    private void retrieveCompleteList() {
+        repo.getStudentOfTeacherRef(teacherKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange:  complete" + dataSnapshot);
+                ReportQuizzItem item;
+                Quiz quiz;
+
+                String name;
+                int fails = 0, success = 0, na = 0;
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    name = (String) dataSnapshot1.child("name").getValue();
+                    Log.d(TAG, "onDataChange:  student " + dataSnapshot1);
+                    fails = success = na = 0;
+                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.child(Constants.COMPLETED_QUIZZ).getChildren()) {
+                        // sa
+                        quiz = dataSnapshot2.getValue(Quiz.class);
+                        if (quiz != null) {
+                            if (quiz.getGrade() > Constants.FAILED) {
+                                success++;
+                            } else {
+                                fails++;
+                            }
+                        }
+                    }
+                    na = n_quizzes - (fails + success);
+                    na = na >= 0 ? na : 0;
+
+                    if (rvReportStudentsGradesTeacherFragment != null) {
+                        studentAdapter.add(new ReportQuizzItem(fails, success, na, name));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /*    repo.getCompleteListRef("0114919427", studentUUID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "onDataChange:  completeList" + dataSnapshot);
+                    List<Quiz> list = new ArrayList<>();
+                    Quiz temp;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        temp = snapshot.getValue(Quiz.class);
+                        if (temp != null) {
+                            list.add(temp);
+                        }
+                    }
+                    completedList = new ArrayList<>(list);
+                    Log.d(TAG, "size of complete: " + completedList.size());
+
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        */
 
     }
 

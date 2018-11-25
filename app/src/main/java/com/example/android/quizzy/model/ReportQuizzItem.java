@@ -4,7 +4,16 @@ public class ReportQuizzItem {
     private int fails;
     private int success;
     private int na;
-    String name;
+    private String name;
+    private String topStudent;
+
+    public String getTopStudent() {
+        return topStudent;
+    }
+
+    public void setTopStudent(String topStudent) {
+        this.topStudent = topStudent;
+    }
 
     public ReportQuizzItem() {
     }

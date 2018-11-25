@@ -26,13 +26,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class StudentActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public String studentID = "1";
+    public String studentID = "0";
     @BindView(R.id.containerStudent)
     FrameLayout containerStudent;
     FragmentManager manager = getSupportFragmentManager();
@@ -62,7 +64,7 @@ public class StudentActivity extends AppCompatActivity
         if (teacherUUID != null) {
             show("tid " + teacherUUID);
             // studentID = repo.getUUID();
-            studentID = "1";
+            studentID = "0";
             repo.getStudentName(studentID, teacherUUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -71,6 +73,8 @@ public class StudentActivity extends AppCompatActivity
                     Log.d(TAG, dataSnapshot + " onDataChange: " + studentName);
                     show("student_name " + studentName);
                     openQuizzListFragment();
+
+                    EventBus.getDefault().post(studentName);
                 }
 
                 @Override
@@ -134,7 +138,7 @@ public class StudentActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             FirebaseAuth.getInstance().signOut();
             // teacherUUID = "0114919427";
-            studentID = "1";
+            studentID = "0";
             repo.getCompleteListRef(teacherUUID, studentID).removeValue();
         }
 

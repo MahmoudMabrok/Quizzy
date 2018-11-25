@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.util.Constants;
+import com.plattysoft.leonids.ParticleSystem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +25,19 @@ public class Entry extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
         ButterKnife.bind(this);
+
+      /*  new ParticleSystem(this, 4445554, R.drawable.add, 2000)
+                .setSpeedModuleAndAngleRange(0f, 0.3f, 180, 180)
+                .setRotationSpeed(144)
+                .setAcceleration(0.00005f, 90)
+                .emit(btnIoenStudent, 50);*/
+
+      /*  new ParticleSystem(this, 10, R.drawable.button, 2000)
+                .setSpeedRange(0.2f , 0.5f)
+                .oneShot(btnIoenTeacher, 2);*/
+
+
+
     }
 
     @OnClick(R.id.btnIoenTeacher)

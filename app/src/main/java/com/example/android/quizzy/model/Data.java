@@ -6,7 +6,15 @@ public class Data {
 
     private String quizName;
     private List<AttemptedQuiz> attemptedQuizList;
+    private String topStudent;
 
+    public String getTopStudent() {
+        return topStudent;
+    }
+
+    public void setTopStudent(String topStudent) {
+        this.topStudent = topStudent;
+    }
 
     public String getQuizName() {
         return quizName;
