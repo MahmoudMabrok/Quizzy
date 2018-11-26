@@ -16,9 +16,12 @@ import android.widget.Toast;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.fragment.NotificationFragment;
+import com.example.android.quizzy.fragment.QuizzDetailTeacherReport;
 import com.example.android.quizzy.fragment.QuizzListTeacher;
 import com.example.android.quizzy.fragment.ReportsTeacherFragment;
+import com.example.android.quizzy.model.Data;
 import com.example.android.quizzy.util.Constants;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +38,8 @@ public class TeacherHome extends AppCompatActivity
     FragmentManager manager = getSupportFragmentManager();
     FragmentTransaction transition;
 
+    public Data dataSendedToQuizDetail;
+    public String name = "AAA";
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -51,7 +56,7 @@ public class TeacherHome extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            FirebaseAuth.getInstance().signOut();
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,6 +154,14 @@ public class TeacherHome extends AppCompatActivity
         bundle.putString(Constants.TEACHERS_KEY, key);
         teacher.setArguments(bundle);
         transition.replace(R.id.container, teacher).commit();
+    }
+
+    public void openQuizzDetail(Data data) {
+        dataSendedToQuizDetail = data;
+        transition = manager.beginTransaction();
+        transition.setCustomAnimations(R.anim.slide_up, R.anim.slide_down);
+        QuizzDetailTeacherReport teacher = new QuizzDetailTeacherReport();
+        transition.add(R.id.container, teacher).commit();
     }
 
 

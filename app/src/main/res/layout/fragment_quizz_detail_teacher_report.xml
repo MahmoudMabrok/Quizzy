@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/default16_margin"
+    android:background="@color/black"
     tools:context=".fragment.QuizzDetailTeacherReport"
     tools:ignore="MissingDefaultResource">
 
@@ -19,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Quizz"
+            android:textColor="#ffffff"
             android:textSize="30sp"
             android:gravity="center"
             android:layout_marginBottom="@dimen/default16_margin" />
@@ -33,6 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/ring_back"
                 android:orientation="vertical">
 
                 <TextView
@@ -58,6 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/ring_back"
                 android:orientation="vertical">
 
                 <TextView
@@ -83,6 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/ring_back"
                 android:orientation="vertical">
 
                 <TextView
@@ -90,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:textColor="#ffffff"
+
                     android:text="5"
                     android:textSize="22sp" />
 
@@ -98,7 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:textColor="#ffffff"
+
                     android:text="NA"
                     android:textSize="22sp" />
 

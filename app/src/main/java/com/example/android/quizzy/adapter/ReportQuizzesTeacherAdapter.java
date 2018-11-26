@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.api.DataRepo;
+import com.example.android.quizzy.interfaces.OnQuizzReportClick;
 import com.example.android.quizzy.model.NotifactionItem;
 import com.example.android.quizzy.model.ReportQuizzItem;
 import com.example.android.quizzy.util.Constants;
@@ -26,6 +28,11 @@ import butterknife.ButterKnife;
 public class ReportQuizzesTeacherAdapter extends RecyclerView.Adapter<ReportQuizzesTeacherAdapter.ViewHolder> {
 
     private List<ReportQuizzItem> list = new ArrayList<>();
+    private OnQuizzReportClick lisnter;
+
+    public ReportQuizzesTeacherAdapter(OnQuizzReportClick lisnter) {
+        this.lisnter = lisnter;
+    }
 
     @NonNull
     @Override
@@ -35,12 +42,21 @@ public class ReportQuizzesTeacherAdapter extends RecyclerView.Adapter<ReportQuiz
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         ReportQuizzItem item = list.get(position);
         holder.tvReportQuizzName.setText(item.getName());
         holder.tvReportSuccess.setText("" + item.getSuccess());
         holder.tvReportFailed.setText("" + item.getFails());
         holder.tvReportNA.setText("" + item.getNa());
+
+        if (lisnter != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    lisnter.onClick(position);
+                }
+            });
+        }
 
     }
 

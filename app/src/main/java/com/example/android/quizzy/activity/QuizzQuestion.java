@@ -62,7 +62,11 @@ public class QuizzQuestion extends AppCompatActivity {
         initRv();
         repo = new DataRepo();
 
-        if (!getIntent().getBooleanExtra("s", false)) { //case of new quizz (non-solved quizz)
+        if (getIntent().getBooleanExtra("solved", false)) {
+            AttemptedQuiz attemptedQuiz = getIntent().getParcelableExtra("data");
+            adapter.setList(attemptedQuiz.getQuestionArrayList());
+            quizzSubmit.setVisibility(View.GONE);
+        } else if (!getIntent().getBooleanExtra("s", false)) { //case of new quizz (non-solved quizz)
             repo.getSpecificQuizRef(teacher, quizeID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

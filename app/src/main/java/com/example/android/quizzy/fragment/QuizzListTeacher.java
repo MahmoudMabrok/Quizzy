@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.activity.AddEditQuiz;
+import com.example.android.quizzy.activity.TeacherHome;
 import com.example.android.quizzy.adapter.QuizeListTeacherAdapter;
 import com.example.android.quizzy.interfaces.OnQuizzClick;
 import com.example.android.quizzy.model.Quiz;
@@ -64,6 +65,8 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         unbinder = ButterKnife.bind(this, view);
         teacherKey = getArguments().getString(Constants.TEACHERS_KEY);
         initRv();
+
+        ((TeacherHome) getActivity()).name = "DDD";
         return view;
     }
 

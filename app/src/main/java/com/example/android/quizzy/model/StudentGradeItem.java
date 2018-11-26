@@ -4,6 +4,11 @@ public class StudentGradeItem {
     private String name;
     private int grade;
 
+    public StudentGradeItem(String name, int grade) {
+        this.name = name;
+        this.grade = grade;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,6 +1,7 @@
 package com.example.android.quizzy.fragment;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,8 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.activity.TeacherHome;
 import com.example.android.quizzy.adapter.ReportQuizzesTeacherAdapter;
 import com.example.android.quizzy.api.DataRepo;
+import com.example.android.quizzy.interfaces.OnQuizzReportClick;
 import com.example.android.quizzy.model.AttemptedQuiz;
 import com.example.android.quizzy.model.Data;
 import com.example.android.quizzy.model.Quiz;
@@ -43,13 +46,10 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReportsTeacherFragment extends Fragment {
-
+public class ReportsTeacherFragment extends Fragment implements OnQuizzReportClick {
 
     @BindView(R.id.barTeacherQuizzes)
     BarChart barTeacherQuizzes;
-
-
     Unbinder unbinder;
     @BindView(R.id.rvReportQuiezzTeacher)
     RecyclerView rvReportQuiezzTeacher;
@@ -82,6 +82,9 @@ public class ReportsTeacherFragment extends Fragment {
         initRv();
         retriveTotalNStudents();
 
+
+        Toast.makeText(getContext(), ((TeacherHome) getActivity()).name, Toast.LENGTH_SHORT).show();
+
         return view;
     }
 
@@ -102,13 +105,12 @@ public class ReportsTeacherFragment extends Fragment {
     }
 
     private void initRv() {
-        adapter = new ReportQuizzesTeacherAdapter();
+        adapter = new ReportQuizzesTeacherAdapter(this);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvReportQuiezzTeacher.setAdapter(adapter);
         rvReportQuiezzTeacher.setLayoutManager(manager);
 
-
-        studentAdapter = new ReportQuizzesTeacherAdapter();
+        studentAdapter = new ReportQuizzesTeacherAdapter(null);
         LinearLayoutManager manager1 = new LinearLayoutManager(getContext());
         rvReportStudentsGradesTeacherFragment.setAdapter(studentAdapter);
         rvReportStudentsGradesTeacherFragment.setLayoutManager(manager1);
@@ -118,6 +120,7 @@ public class ReportsTeacherFragment extends Fragment {
     private static final String TAG = "ReportsTeacherFragment";
 
     private void start(final String teacherKey) {
+        //region retriveQuizzes of Teacher
         repo.getTeacherQuizz(teacherKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -152,15 +155,16 @@ public class ReportsTeacherFragment extends Fragment {
 
             }
         });
+        //endregion
     }
 
-    private BarDataSet failsSet;
+   /* private BarDataSet failsSet;
     private BarDataSet successSet;
     private BarDataSet naSet;
 
     private List<BarEntry> failsEntries = new ArrayList<>();
     private List<BarEntry> successEntries = new ArrayList<>();
-    private List<BarEntry> naEntries = new ArrayList<>();
+    private List<BarEntry> naEntries = new ArrayList<>();*/
 
     List<String> labels = new ArrayList<>();
 
@@ -193,12 +197,15 @@ public class ReportsTeacherFragment extends Fragment {
             }
          /*   int max = Collections.max(grades.keySet());
             show("" + max);
-
             if (max >= 0 ){
-
             }*/
             na = (int) (totalStudentNumber - (fails + success));
             na = na >= 0 ? na : 0;
+
+            //assign result value statistics to data to be sended to QuizDetail Fragment
+            data.setFails(fails);
+            data.setSuccess(success);
+            data.setNa(na);
 /*
             failsEntries.add(new BarEntry(xValue, fails));
             successEntries.add(new BarEntry(xValue, success));
@@ -206,15 +213,12 @@ public class ReportsTeacherFragment extends Fragment {
 */
 
             adapter.add(new ReportQuizzItem(fails, success, na, labels.get(xValue - 1)));
-
             xValue++; // represnet xAxix for barEntry
-
-            Log.d(TAG, "startQuizAnalysis: " + fails + " " + success + " " + na);
         }
 
 
         n_quizzes = dataList.size();
-        // (2) -> Create  DataSet
+      /*  // (2) -> Create  DataSet
         failsSet = new BarDataSet(failsEntries, "Failed");
         failsSet.setColor(Color.RED);
 
@@ -226,7 +230,7 @@ public class ReportsTeacherFragment extends Fragment {
         BarData barData = new BarData(failsSet, successSet, naSet);
         //        BarData barData = new BarData(failsSet );
         barTeacherQuizzes.setData(barData);
-        // barTeacherQuizzes.invalidate();
+        // barTeacherQuizzes.invalidate();*/
 
         // (3) styles for barChart
 
@@ -243,13 +247,13 @@ public class ReportsTeacherFragment extends Fragment {
         //  int groupCount = 4;
         int groupCount = dataList.size();
 
-        barData.setBarWidth(0.15f);
+        /*  barData.setBarWidth(0.15f);*/
 
-        barTeacherQuizzes.setScaleYEnabled(true);
+      /*  barTeacherQuizzes.setScaleYEnabled(true);
         barTeacherQuizzes.getXAxis().setAxisMinimum(0);
         barTeacherQuizzes.getXAxis().setAxisMaximum(0 + barTeacherQuizzes.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
         barTeacherQuizzes.groupBars(0, groupSpace, barSpace); // perform the "explicit" grouping
-        barTeacherQuizzes.invalidate();
+        barTeacherQuizzes.invalidate();*/
 
         startStudnetAnalysis();
 
@@ -336,5 +340,18 @@ public class ReportsTeacherFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    /**
+     * position of clicked quizz to show each full details
+     *
+     * @param pos
+     */
+    @Override
+    public void onClick(int pos) {
+        Log.d(TAG, "onClick: " + pos);
+        Data data = dataList.get(pos);
+        ((TeacherHome) getActivity()).openQuizzDetail(data);
+
     }
 }
