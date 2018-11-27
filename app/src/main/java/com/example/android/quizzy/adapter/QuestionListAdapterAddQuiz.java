@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.interfaces.OnQuestionEdit;
 import com.example.android.quizzy.model.Question;
 
 import java.util.ArrayList;
@@ -21,22 +23,26 @@ import butterknife.ButterKnife;
  */
 public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionListAdapterAddQuiz.ViewHolder> {
 
-    private List<String> questionList;
 
-    public QuestionListAdapterAddQuiz() {
+    private List<Question> questionList;
+    private OnQuestionEdit edit;
+
+    public QuestionListAdapterAddQuiz(OnQuestionEdit onQuestionEdit) {
+        edit = onQuestionEdit;
         questionList = new ArrayList<>();
     }
 
     public void setQuestionList(List<Question> list) {
         questionList.clear();
-        for (Question question : list
+        questionList = new ArrayList<>(list);
+        /*for (Question question : list
                 ) {
             addQuestion(question);
-        }
+        }*/
     }
 
     public void addQuestion(Question question) {
-        questionList.add(question.getQuestion());
+        questionList.add(question);
         notifyItemInserted(questionList.size() - 1);
     }
 
@@ -48,9 +54,23 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String question = questionList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        String question = questionList.get(position).getQuestion();
         holder.tvQuestion.setText(question);
+
+        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                remove(position);
+            }
+        });
+
+        holder.ivEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit.onClickEditQuestion(position);
+            }
+        });
     }
 
     @Override
@@ -68,10 +88,19 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
         notifyDataSetChanged();
     }
 
+    public List<Question> getQuestionList() {
+        return questionList;
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuestion)
         TextView tvQuestion;
+
+        @BindView(R.id.ivEdit)
+        ImageView ivEdit;
+        @BindView(R.id.ivDelete)
+        ImageView ivDelete;
 
         ViewHolder(View view) {
             super(view);

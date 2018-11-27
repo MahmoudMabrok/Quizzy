@@ -49,6 +49,7 @@ public class QuestionAddFragment extends Fragment {
 
     AnwerListAddQuizAdapter adapter;
     boolean isUpdate;
+    private List<String> anserList;
 
     public QuestionAddFragment() {
         // Required empty public constructor
@@ -66,7 +67,8 @@ public class QuestionAddFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             String question = bundle.getString(Constants.question);
-            ArrayList<String> anserList = bundle.getStringArrayList(Constants.answerList);
+            // List<String> anserList = bundle.getStringArrayList(Constants.answerList);
+            anserList = ((AddEditQuiz) getActivity()).questionToEdit.getAnswerList();
             fillUi(question, anserList);
             // fillUi(question);
             isUpdate = true;
@@ -109,7 +111,7 @@ public class QuestionAddFragment extends Fragment {
         unbinder.unbind();
     }
 
-    private void fillUi(String question, ArrayList<String> anser) {
+    private void fillUi(String question, List<String> anser) {
         edQuestionAddFragment.setText(question);
         answerList = new ArrayList<>(anser);
         adapter.setList(answerList);

@@ -22,6 +22,18 @@ public class Question implements Parcelable {
     private boolean state;
     private int weight;
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                "key='" + key + '\'' +
+                ", question='" + question + '\'' +
+                ", answerList=" + (answerList != null ? answerList.size() : " ") +
+                ", correctAnswer='" + correctAnswer + '\'' +
+                ", StudentAnswer='" + StudentAnswer + '\'' +
+                ", state=" + state +
+                ", weight=" + weight +
+                '}';
+    }
 
     public Question() {
     }

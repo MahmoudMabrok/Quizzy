@@ -24,6 +24,7 @@ import com.example.android.quizzy.R;
 import com.example.android.quizzy.adapter.QuestionListAdapterAddQuiz;
 import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.fragment.QuestionAddFragment;
+import com.example.android.quizzy.interfaces.OnQuestionEdit;
 import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.model.Quiz;
@@ -45,7 +46,7 @@ import butterknife.OnClick;
  * Input: is key of teacher to add quiz in its child node
  * EditState: when accept quiz key so it be edited
  */
-public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
+public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQuestionEdit {
 
     @BindView(R.id.edQuizName)
     EditText edQuizName;
@@ -111,14 +112,23 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 String name = (String) dataSnapshot.child("name").getValue();
                 edQuizName.setText(name);
                 Quiz quiz = dataSnapshot.getValue(Quiz.class);
-                Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
+                //        Log.d(TAG, "onDataChange: " + quiz.toString());
+                //    Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
                 questionList = new ArrayList<>();
                 //   List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
                     //QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
                     question = snapshot.getValue(Question.class);
-                    Log.d(TAG, "onDataChange: 2 " + snapshot);
+
+                    String answer;
+                    List<String> list = new ArrayList<>();
+                    for (DataSnapshot dataSnapshot1 : snapshot.child(Constants.answerList).getChildren()) {
+                        list.add((String) dataSnapshot1.getValue());
+                    }
+                    question.setAnswerList(list);
+
+                    //  Log.d(TAG, "onDataChange: question data  " + question.toString());
                     if (question != null) {
                         questionList.add(question);
                         Log.d(TAG, "onDataChange: " + question.toString());
@@ -135,7 +145,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
             }
         });
     }
-
+/*
     private Question getQuestionFromJson(DataSnapshot snapshot) {
         Question question = new Question();
         question.setQuestion((String) snapshot.child("question").getValue());
@@ -146,7 +156,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         }
         question.setAnswerList(ansewrs);
         return question;
-    }
+    }*/
 
     private void replaceQuestionFragment() {
         transaction = manager.beginTransaction();
@@ -155,7 +165,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     }
 
     private void initRv() {
-        adapter = new QuestionListAdapterAddQuiz();
+        adapter = new QuestionListAdapterAddQuiz(this);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         rvQustionListTeacher.setLayoutManager(manager);
         rvQustionListTeacher.setAdapter(adapter);
@@ -182,11 +192,12 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         }).attachToRecyclerView(rvQustionListTeacher);
     }
 
+    public Question questionToEdit;
     private void replaceQuestionFragment(Question question) {
+        questionToEdit = question;
         transaction = manager.beginTransaction();
         QuestionAddFragment fragment = new QuestionAddFragment();
         Bundle bundle = new Bundle();
-        /*bundle.putSerializable("q", question);*/
         bundle.putStringArrayList(Constants.answerList, (ArrayList<String>) question.getAnswerList());
         bundle.putString(Constants.question, question.getQuestion());
         fragment.setArguments(bundle);
@@ -198,6 +209,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     public void onViewClicked() {
         String quizName = edQuizName.getText().toString();
         if (!TextUtils.isEmpty(quizName)) {
+            questionList = adapter.getQuestionList();
             if (questionList.size() > 0) {
                 Quiz quiz = new Quiz();
                 quiz.setName(quizName);
@@ -277,6 +289,15 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         quizzAndAddLayout.setVisibility(View.GONE);
         animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         quizzAndAddLayout.setAnimation(animationDown);
+
+    }
+
+    @Override
+    public void onClickEditQuestion(int pos) {
+        Question question = questionList.get(pos);
+        adapter.remove(pos);
+        questionList.remove(pos);
+        replaceQuestionFragment(question);
 
     }
 }

@@ -22,12 +22,10 @@ import butterknife.ButterKnife;
 public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQuizAdapter.ViewHolder> {
 
     private List<String> anserList;
-    private List<String> checkedList;
     private String correct;
 
     public AnwerListAddQuizAdapter() {
         anserList = new ArrayList<>();
-        checkedList = new ArrayList<>();
     }
 
     @NonNull
@@ -38,8 +36,8 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final String s = anserList.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        String s = anserList.get(position);
         holder.tvAnswer.setText(s);
 
         if (s.equals(correct)) {
@@ -51,15 +49,17 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                correct = s;
                 if (holder.cbAnswer.isChecked()) {
                     holder.cbAnswer.setChecked(false);
                 } else {
                     holder.cbAnswer.setChecked(true);
+                    correct = anserList.get(position);
                 }
                 notifyDataSetChanged();
             }
         });
+
+        holder.cbAnswer.setClickable(false);
 
     }
 
@@ -71,9 +71,6 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
         return anserList;
     }
 
-    public List<String> getCheckedList() {
-        return checkedList;
-    }
 
     @Override
     public int getItemCount() {
@@ -87,7 +84,6 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
 
     public void deleteAll() {
         anserList.clear();
-        checkedList.clear();
         notifyDataSetChanged();
     }
 
@@ -102,7 +98,6 @@ public class AnwerListAddQuizAdapter extends RecyclerView.Adapter<AnwerListAddQu
 
     public void remove(int pos) {
         String anser = anserList.get(pos);
-        checkedList.remove(anser);
         anserList.remove(pos);
         notifyDataSetChanged();
     }

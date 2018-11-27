@@ -22,6 +22,19 @@ public class Quiz {
     public Quiz() {
     }
 
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "key='" + key + '\'' +
+                ", name='" + name + '\'' +
+                ", creatorName='" + creatorName + '\'' +
+                ", teacherKey='" + teacherKey + '\'' +
+                ", questionList=" + questionList.size() +
+                ", score=" + score +
+                ", percentage=" + percentage +
+                ", grade=" + grade +
+                '}';
+    }
 
     public Quiz(String name, String creatorName) {
         this.name = name;
