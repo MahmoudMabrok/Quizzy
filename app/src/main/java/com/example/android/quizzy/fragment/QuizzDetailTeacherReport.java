@@ -78,7 +78,7 @@ public class QuizzDetailTeacherReport extends Fragment implements OnQuizzReportC
         rvReportStudentDetailTeacher.setAdapter(adapter);
 
         for (AttemptedQuiz quiz : data.getAttemptedQuizList()) {
-            adapter.add(new StudentGradeItem(quiz.getStudentName(), quiz.getGrade()));
+            adapter.add(new StudentGradeItem(quiz.getStudentName(), quiz.getGrade(), quiz.getPercentage()));
         }
     }
 
@@ -103,9 +103,6 @@ public class QuizzDetailTeacherReport extends Fragment implements OnQuizzReportC
     @Override
     public void onClick(int pos) {
         AttemptedQuiz quiz = data.getAttemptedQuizList().get(pos);
-        Intent intent = new Intent(getContext(), QuizzQuestion.class);
-        intent.putExtra("solved", true);
-        intent.putExtra("data", quiz);
-        startActivity(intent);
+        ((TeacherHome) getActivity()).openSolvedQuizz(quiz);
     }
 }

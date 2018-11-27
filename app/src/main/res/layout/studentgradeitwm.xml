@@ -20,6 +20,15 @@
             android:text="A" />
 
         <TextView
+            android:id="@+id/tvSTudentPercentage"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:text="A" />
+
+        <TextView
             android:id="@+id/tvSTudentGrade"
             android:layout_width="0dp"
             android:layout_weight="1"

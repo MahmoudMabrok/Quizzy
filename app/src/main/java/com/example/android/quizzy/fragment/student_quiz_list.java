@@ -154,13 +154,11 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
     @Override
     public void onQuizzClick(Quiz quiz) {
         Intent intent = new Intent(getContext(), QuizzQuestion.class);
-
         intent.putExtra("sID", studentUUID);
         intent.putExtra("id", quiz.getKey());
         if (quiz.getQuestionList().get(0).getStudentAnswer() != null) {
             show("Completed ");
             intent.putExtra("s", true);
-
         }
         intent.putExtra(Constants.STUDENT_NAME, studentName);
         show("in intent " + studentName);

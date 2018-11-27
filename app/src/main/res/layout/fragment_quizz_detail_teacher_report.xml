@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/default16_margin"
-    android:background="@color/black"
     tools:context=".fragment.QuizzDetailTeacherReport"
     tools:ignore="MissingDefaultResource">
 
@@ -20,7 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Quizz"
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
+            android:background="@drawable/header_back"
+            android:textStyle="bold"
             android:textSize="30sp"
             android:gravity="center"
             android:layout_marginBottom="@dimen/default16_margin" />
@@ -28,13 +29,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#010101"
             android:layout_marginBottom="@dimen/default16_margin">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/ring_back"
                 android:orientation="vertical">
 
@@ -61,6 +62,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/ring_back"
                 android:orientation="vertical">
 
@@ -114,14 +116,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginTop="@dimen/default16_margin"
-            android:background="@color/not_attemped">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:text="Student Name"
                 android:textSize="18sp"
@@ -132,7 +133,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="N.Failed"
+                android:textStyle="bold"
+                android:text="Percentage"
                 android:textSize="18sp"
                 android:layout_marginRight="@dimen/margine_right_item"
                 android:layout_marginEnd="@dimen/margine_right_item" />
@@ -142,19 +144,19 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="N.Success"
+                android:textStyle="bold"
+                android:text="Grade"
                 android:textSize="18sp"
                 android:layout_marginRight="@dimen/margine_right_item"
                 android:layout_marginEnd="@dimen/margine_right_item" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="N.NA"
-                android:textSize="18sp" />
+
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="5dp"
+            android:background="#c0c0c0" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvReportStudentDetailTeacher"

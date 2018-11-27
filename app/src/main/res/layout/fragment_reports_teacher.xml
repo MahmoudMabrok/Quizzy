@@ -18,8 +18,9 @@
             android:layout_height="wrap_content"
             android:text="Quizzes Reports"
             android:textSize="22sp"
+            android:textColor="@color/white"
             android:gravity="center_horizontal"
-            android:background="@drawable/item_back" />
+            android:background="@drawable/header_back" />
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barTeacherQuizzes"
@@ -31,14 +32,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginTop="@dimen/default16_margin"
-            android:background="@color/not_attemped">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:text="Quizz Name"
                 android:textSize="18sp"
@@ -49,7 +49,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="N.Failed"
+                android:text="@string/f"
                 android:textSize="18sp"
                 android:layout_marginRight="@dimen/margine_right_item"
                 android:layout_marginEnd="@dimen/margine_right_item" />
@@ -59,7 +59,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="N.Success"
+                android:textStyle="bold"
+                android:text="@string/s"
                 android:textSize="18sp"
                 android:layout_marginRight="@dimen/margine_right_item"
                 android:layout_marginEnd="@dimen/margine_right_item" />
@@ -69,9 +70,16 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="N.NA"
+                android:text="@string/na"
+                android:textStyle="bold"
                 android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="5dp"
+            android:background="#c0c0c0" />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvReportQuiezzTeacher"
@@ -84,22 +92,22 @@
             android:layout_height="wrap_content"
             android:text="Students Reports"
             android:textSize="22sp"
+            android:textColor="@color/white"
             android:gravity="center_horizontal"
-            android:background="@drawable/item_back"
+            android:background="@drawable/header_back"
             android:layout_marginTop="@dimen/default16_margin" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginTop="@dimen/default16_margin"
-            android:background="@color/not_attemped">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:text="Student Name"
                 android:textSize="18sp"
@@ -110,7 +118,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="N.Failed"
+                android:textStyle="bold"
+                android:text="@string/f"
                 android:textSize="18sp"
                 android:layout_marginRight="@dimen/margine_right_item"
                 android:layout_marginEnd="@dimen/margine_right_item" />
@@ -120,7 +129,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="N.Success"
+                android:textStyle="bold"
+                android:text="@string/s"
                 android:textSize="18sp"
                 android:layout_marginRight="@dimen/margine_right_item"
                 android:layout_marginEnd="@dimen/margine_right_item" />
@@ -129,10 +139,17 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
-                android:text="N.NA"
+                android:text="@string/na"
                 android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="5dp"
+            android:background="#c0c0c0" />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvReportStudentsGradesTeacherFragment"

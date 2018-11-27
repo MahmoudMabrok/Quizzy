@@ -1,6 +1,5 @@
 package com.example.android.quizzy.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.interfaces.OnQuizzReportClick;
-import com.example.android.quizzy.model.ReportQuizzItem;
 import com.example.android.quizzy.model.StudentGradeItem;
 import com.example.android.quizzy.util.Constants;
 
@@ -24,6 +22,7 @@ import butterknife.ButterKnife;
  * Created by Mahmoud on 10/22/2018.
  */
 public class ReportQuizzesDetailTeacherAdapter extends RecyclerView.Adapter<ReportQuizzesDetailTeacherAdapter.ViewHolder> {
+
 
     private List<StudentGradeItem> list = new ArrayList<>();
     private OnQuizzReportClick quizzReportClick;
@@ -44,6 +43,7 @@ public class ReportQuizzesDetailTeacherAdapter extends RecyclerView.Adapter<Repo
         StudentGradeItem item = list.get(position);
         holder.tvSTudentGrade.setText(Constants.gradesAsString[item.getGrade()]);
         holder.tvSTudentName.setText(item.getName());
+        holder.tvSTudentPercentage.setText(String.valueOf(item.getPercentage()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +69,8 @@ public class ReportQuizzesDetailTeacherAdapter extends RecyclerView.Adapter<Repo
         TextView tvSTudentName;
         @BindView(R.id.tvSTudentGrade)
         TextView tvSTudentGrade;
+        @BindView(R.id.tvSTudentPercentage)
+        TextView tvSTudentPercentage;
 
         ViewHolder(View view) {
             super(view);

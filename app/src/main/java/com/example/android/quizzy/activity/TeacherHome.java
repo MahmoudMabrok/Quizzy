@@ -19,6 +19,8 @@ import com.example.android.quizzy.fragment.NotificationFragment;
 import com.example.android.quizzy.fragment.QuizzDetailTeacherReport;
 import com.example.android.quizzy.fragment.QuizzListTeacher;
 import com.example.android.quizzy.fragment.ReportsTeacherFragment;
+import com.example.android.quizzy.fragment.ShowSolvedQuiz;
+import com.example.android.quizzy.model.AttemptedQuiz;
 import com.example.android.quizzy.model.Data;
 import com.example.android.quizzy.util.Constants;
 import com.google.firebase.auth.FirebaseAuth;
@@ -161,8 +163,18 @@ public class TeacherHome extends AppCompatActivity
         transition = manager.beginTransaction();
         transition.setCustomAnimations(R.anim.slide_up, R.anim.slide_down);
         QuizzDetailTeacherReport teacher = new QuizzDetailTeacherReport();
-        transition.add(R.id.container, teacher).commit();
+        transition.replace(R.id.container, teacher).commit();
     }
 
 
+    public AttemptedQuiz attemptedQuiz;
+
+    public void openSolvedQuizz(AttemptedQuiz quiz) {
+        attemptedQuiz = quiz;
+        transition = manager.beginTransaction();
+        transition.setCustomAnimations(0, R.anim.slide_down);
+        ShowSolvedQuiz teacher = new ShowSolvedQuiz();
+        transition.replace(R.id.container, teacher).commit();
+
+    }
 }

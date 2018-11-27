@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by Mahmoud on 10/21/2018.
  */
 @Keep
-public class Question implements Parcelable {
+public class Question {
     private String key;
     private String question ;
     private List<String> answerList ;
@@ -22,18 +22,6 @@ public class Question implements Parcelable {
     private boolean state;
     private int weight;
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "key='" + key + '\'' +
-                ", question='" + question + '\'' +
-                ", answerList=" + (answerList != null ? answerList.size() : " ") +
-                ", correctAnswer='" + correctAnswer + '\'' +
-                ", StudentAnswer='" + StudentAnswer + '\'' +
-                ", state=" + state +
-                ", weight=" + weight +
-                '}';
-    }
 
     public Question() {
     }
@@ -100,41 +88,4 @@ public class Question implements Parcelable {
         this.weight = weight;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.key);
-        dest.writeString(this.question);
-        dest.writeStringList(this.answerList);
-        dest.writeString(this.correctAnswer);
-        dest.writeString(this.StudentAnswer);
-        dest.writeByte(this.state ? (byte) 1 : (byte) 0);
-        dest.writeInt(this.weight);
-    }
-
-    protected Question(Parcel in) {
-        this.key = in.readString();
-        this.question = in.readString();
-        this.answerList = in.createStringArrayList();
-        this.correctAnswer = in.readString();
-        this.StudentAnswer = in.readString();
-        this.state = in.readByte() != 0;
-        this.weight = in.readInt();
-    }
-
-    public static final Parcelable.Creator<Question> CREATOR = new Parcelable.Creator<Question>() {
-        @Override
-        public Question createFromParcel(Parcel source) {
-            return new Question(source);
-        }
-
-        @Override
-        public Question[] newArray(int size) {
-            return new Question[size];
-        }
-    };
 }

@@ -106,7 +106,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     private static final String TAG = "AddEditQuiz";
 
     private void fetchQustionList() {
-        dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = (String) dataSnapshot.child("name").getValue();
@@ -116,12 +116,12 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
                 //    Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
                 questionList = new ArrayList<>();
+                Log.d(TAG, "quizz  data " + dataSnapshot);
                 //   List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
                     //QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
                     question = snapshot.getValue(Question.class);
 
-                    String answer;
                     List<String> list = new ArrayList<>();
                     for (DataSnapshot dataSnapshot1 : snapshot.child(Constants.answerList).getChildren()) {
                         list.add((String) dataSnapshot1.getValue());
@@ -134,8 +134,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
                         Log.d(TAG, "onDataChange: " + question.toString());
                     }
                 }
-                if (questionList.size() > 0) {
+                if (rvQustionListTeacher != null && questionList.size() > 0) {
                     adapter.setQuestionList(questionList);
+                    Log.d(TAG, "quizz data " + adapter.getQuestionList().size());
                 }
             }
 

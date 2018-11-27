@@ -39,6 +39,7 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
                 ) {
             addQuestion(question);
         }*/
+        notifyDataSetChanged();
     }
 
     public void addQuestion(Question question) {

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="@dimen/default16_margin"
     android:alpha="90"
-    android:background="#ffffff"
+    android:background="@drawable/quizz_back"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -37,7 +37,6 @@
             android:layout_marginEnd="@dimen/default16_margin"
             android:layout_marginRight="@dimen/default16_margin"
             android:layout_weight="1"
-            android:background="@drawable/item_back"
             android:gravity="center_horizontal"
             android:text="0 %"
             android:textSize="18dp" />
@@ -56,7 +55,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:background="@drawable/item_back"
             android:text="Not Attempted"
             android:textColor="@color/not_attemped"
             android:textSize="18dp" />

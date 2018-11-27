@@ -62,11 +62,7 @@ public class QuizzQuestion extends AppCompatActivity {
         initRv();
         repo = new DataRepo();
 
-        if (getIntent().getBooleanExtra("solved", false)) {
-            AttemptedQuiz attemptedQuiz = getIntent().getParcelableExtra("data");
-            adapter.setList(attemptedQuiz.getQuestionArrayList());
-            quizzSubmit.setVisibility(View.GONE);
-        } else if (!getIntent().getBooleanExtra("s", false)) { //case of new quizz (non-solved quizz)
+        if (!getIntent().getBooleanExtra("s", false)) { //case of new quizz (non-solved quizz)
             repo.getSpecificQuizRef(teacher, quizeID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -140,6 +136,7 @@ public class QuizzQuestion extends AppCompatActivity {
         Log.d(TAG, "score : " + percentage);
         show("percentage " + percentage);
         quiz.setPercentage((int) percentage);
+        attemptedQuiz.setPercentage((int) percentage);
 
         if (percentage < 50) {
             quiz.setGrade(Constants.FAILED);
