@@ -39,6 +39,7 @@ import butterknife.Unbinder;
 public class QuizzListTeacher extends Fragment implements OnQuizzClick {
 
 
+    public static final String TAG = "QuizzListTeacher";
     @BindView(R.id.rvQuizListTeacher)
     RecyclerView rvQuizListTeacher;
     Unbinder unbinder;
@@ -48,7 +49,6 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     TextView tvNoInternet;
     private QuizeListTeacherAdapter adapter;
 
-    private static final String TAG = "QuizzListTeacher";
 
     public QuizzListTeacher() {
         // Required empty public constructor

@@ -33,6 +33,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +84,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz_detali_teacher);
         ButterKnife.bind(this);
+        initRv();
 
+        EventBus.getDefault().register(this);
         animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         animationUP = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
@@ -99,7 +104,6 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
             finish();
         }
 
-        initRv();
         replaceQuestionFragment();
     }
 
@@ -145,19 +149,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
 
             }
         });
+
+        replaceQuestionFragment();
     }
-/*
-    private Question getQuestionFromJson(DataSnapshot snapshot) {
-        Question question = new Question();
-        question.setQuestion((String) snapshot.child("question").getValue());
-        question.setCorrectAnswer((String) snapshot.child("correctAnswer").getValue());
-        List<String> ansewrs = new ArrayList<>();
-        for (DataSnapshot snapshot1 : snapshot.child(Constants.Question_answer_list).getChildren()) {
-            ansewrs.add((String) snapshot1.getValue());
-        }
-        question.setAnswerList(ansewrs);
-        return question;
-    }*/
 
     private void replaceQuestionFragment() {
         transaction = manager.beginTransaction();
@@ -194,8 +188,17 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     }
 
     public Question questionToEdit;
+
+    public Question getQuestionToEdit() {
+        return questionToEdit;
+    }
+
+    public void setQuestionToEdit(Question questionToEdit) {
+        this.questionToEdit = questionToEdit;
+    }
+
     private void replaceQuestionFragment(Question question) {
-        questionToEdit = question;
+        setQuestionToEdit(question);
         transaction = manager.beginTransaction();
         QuestionAddFragment fragment = new QuestionAddFragment();
         Bundle bundle = new Bundle();
@@ -210,7 +213,6 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     public void onViewClicked() {
         String quizName = edQuizName.getText().toString();
         if (!TextUtils.isEmpty(quizName)) {
-            questionList = adapter.getQuestionList();
             if (questionList.size() > 0) {
                 Quiz quiz = new Quiz();
                 quiz.setName(quizName);
@@ -249,10 +251,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
      * when add fragment finish and sent the Question
      * hidden it
      *
-     * @param question
      */
-    @Override
-    public void onQuestionAdd(Question question) {
+    @Subscribe
+    public void onEvent(Question question) {
         if (question.getAnswerList().size() > 0) {
             questionList.add(question);
             adapter.addQuestion(question);
@@ -299,6 +300,17 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
         adapter.remove(pos);
         questionList.remove(pos);
         replaceQuestionFragment(question);
+
+    }
+
+    @Override
+    public void onClickDeleteQuestion(int pos) {
+        adapter.remove(pos);
+        questionList.remove(pos);
+    }
+
+    @Override
+    public void onQuestionAdd(Question question) {
 
     }
 }

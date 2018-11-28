@@ -33,12 +33,7 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
     }
 
     public void setQuestionList(List<Question> list) {
-        questionList.clear();
         questionList = new ArrayList<>(list);
-        /*for (Question question : list
-                ) {
-            addQuestion(question);
-        }*/
         notifyDataSetChanged();
     }
 
@@ -62,7 +57,7 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                remove(position);
+                edit.onClickDeleteQuestion(position);
             }
         });
 

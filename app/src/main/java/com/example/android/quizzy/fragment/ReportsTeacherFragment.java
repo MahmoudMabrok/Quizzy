@@ -117,7 +117,7 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
 
     }
 
-    private static final String TAG = "ReportsTeacherFragment";
+    public static final String TAG = "ReportsTeacherFragment";
 
     private void start(final String teacherKey) {
         //region retriveQuizzes of Teacher
@@ -333,7 +333,9 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
     }
 
     private void show(String s) {
-        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        if (getContext() != null) {
+            Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

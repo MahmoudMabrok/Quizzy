@@ -3,15 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#AAAAAA"
     android:padding="@dimen/default16_margin"
     tools:context=".fragment.student_quiz_list">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/pbLoadingquizz"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:pointerIcon="crosshair"
+            android:layout_gravity="center" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvQuizListStudent"
@@ -19,7 +24,7 @@
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/default16_margin" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 
 </ScrollView>

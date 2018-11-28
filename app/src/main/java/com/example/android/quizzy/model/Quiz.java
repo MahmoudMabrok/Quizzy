@@ -22,57 +22,6 @@ public class Quiz {
     public Quiz() {
     }
 
-    @Override
-    public String toString() {
-        return "Quiz{" +
-                "key='" + key + '\'' +
-                ", name='" + name + '\'' +
-                ", creatorName='" + creatorName + '\'' +
-                ", teacherKey='" + teacherKey + '\'' +
-                ", questionList=" + questionList.size() +
-                ", score=" + score +
-                ", percentage=" + percentage +
-                ", grade=" + grade +
-                '}';
-    }
-
-    public Quiz(String name, String creatorName) {
-        this.name = name;
-        this.creatorName = creatorName;
-    }
-
-    public int getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(int percentage) {
-        this.percentage = percentage;
-    }
-
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public String getTeacherKey() {
-        return teacherKey;
-    }
-
-    public void setTeacherKey(String teacherKey) {
-        this.teacherKey = teacherKey;
-    }
-
     public String getKey() {
         return key;
     }
@@ -97,11 +46,43 @@ public class Quiz {
         this.creatorName = creatorName;
     }
 
+    public String getTeacherKey() {
+        return teacherKey;
+    }
+
+    public void setTeacherKey(String teacherKey) {
+        this.teacherKey = teacherKey;
+    }
+
     public List<Question> getQuestionList() {
         return questionList;
     }
 
     public void setQuestionList(List<Question> questionList) {
-        this.questionList = new ArrayList<>(questionList);
+        this.questionList = questionList;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 }

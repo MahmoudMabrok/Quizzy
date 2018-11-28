@@ -42,6 +42,7 @@ public class TeacherHome extends AppCompatActivity
 
     public Data dataSendedToQuizDetail;
     public String name = "AAA";
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -65,6 +66,7 @@ public class TeacherHome extends AppCompatActivity
     }
 
     private static final String TAG = "TeacherHome";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +76,6 @@ public class TeacherHome extends AppCompatActivity
 
         key = getIntent().getStringExtra(Constants.TEACHERS_KEY);
         Log.d(TAG, "onCreate: " + key);
-        //depo.getuuid();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -95,9 +96,16 @@ public class TeacherHome extends AppCompatActivity
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (getFragmentManager().getBackStackEntryCount() > 0)
+            getFragmentManager().popBackStack();
+        else {
             super.onBackPressed();
         }
+        show("" + getFragmentManager().getBackStackEntryCount());
+    }
+
+    private void show(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
     private String key = "0114919427";
@@ -156,6 +164,7 @@ public class TeacherHome extends AppCompatActivity
         bundle.putString(Constants.TEACHERS_KEY, key);
         teacher.setArguments(bundle);
         transition.replace(R.id.container, teacher).commit();
+        transition.addToBackStack(ReportsTeacherFragment.TAG);
     }
 
     public void openQuizzDetail(Data data) {
@@ -164,6 +173,7 @@ public class TeacherHome extends AppCompatActivity
         transition.setCustomAnimations(R.anim.slide_up, R.anim.slide_down);
         QuizzDetailTeacherReport teacher = new QuizzDetailTeacherReport();
         transition.replace(R.id.container, teacher).commit();
+        transition.addToBackStack(null);
     }
 
 
@@ -175,6 +185,9 @@ public class TeacherHome extends AppCompatActivity
         transition.setCustomAnimations(0, R.anim.slide_down);
         ShowSolvedQuiz teacher = new ShowSolvedQuiz();
         transition.replace(R.id.container, teacher).commit();
+        transition.addToBackStack(null);
 
     }
+
+
 }

@@ -13,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
@@ -44,6 +46,8 @@ public class StudentActivity extends AppCompatActivity
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.pbStudent)
+    ProgressBar pbStudent;
     private FragmentTransaction transition;
 
     private DataRepo repo = new DataRepo();
@@ -57,8 +61,8 @@ public class StudentActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
         ButterKnife.bind(this);
+        //   pbStudent.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
-
         Intent intent = getIntent();
         teacherUUID = intent.getStringExtra(Constants.TEACHERS_KEY);
         if (teacherUUID != null) {
@@ -73,7 +77,6 @@ public class StudentActivity extends AppCompatActivity
                     Log.d(TAG, dataSnapshot + " onDataChange: " + studentName);
                     show("student_name " + studentName);
                     openQuizzListFragment();
-
                     EventBus.getDefault().post(studentName);
                 }
 

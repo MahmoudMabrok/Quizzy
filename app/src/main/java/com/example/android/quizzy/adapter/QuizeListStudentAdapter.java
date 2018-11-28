@@ -53,7 +53,7 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         holder.tvQuizState.setText("Not Attempted"); //in case of deleted items and re-binded
         Quiz quiz = quizList.get(position);
@@ -94,7 +94,7 @@ public class QuizeListStudentAdapter extends RecyclerView.Adapter<QuizeListStude
                 public void onClick(View v) {
                     Toast.makeText(context, "" + completeList.size(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(context, "" + holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
-                    onQuizzClick.onQuizzClick(finalQuiz);
+                    onQuizzClick.onQuizzClick(quizList.get(position));
                 }
             });
         }

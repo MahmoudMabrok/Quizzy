@@ -21,6 +21,8 @@ import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.util.Constants;
 import com.example.android.quizzy.util.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,10 +69,12 @@ public class QuestionAddFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             String question = bundle.getString(Constants.question);
-            // List<String> anserList = bundle.getStringArrayList(Constants.answerList);
+            Question question1 = ((AddEditQuiz) getActivity()).getQuestionToEdit();
             anserList = ((AddEditQuiz) getActivity()).questionToEdit.getAnswerList();
+
+            anserList = bundle.getStringArrayList(Constants.answerList);
+
             fillUi(question, anserList);
-            // fillUi(question);
             isUpdate = true;
         }
         return view;
@@ -168,6 +172,7 @@ public class QuestionAddFragment extends Fragment {
     }
 
     private void addQuestion(Question question) {
+        EventBus.getDefault().post(question);
         if (question != null && question.getAnswerList().size() > 0) {
             ((AddEditQuiz) getActivity()).onQuestionAdd(question);
         } else {
@@ -181,15 +186,4 @@ public class QuestionAddFragment extends Fragment {
         answerList.clear();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        show("pause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        show("stop");
-    }
 }
