@@ -74,7 +74,7 @@ public class TeacherHome extends AppCompatActivity
         ButterKnife.bind(this);
 
 
-        key = getIntent().getStringExtra(Constants.TEACHERS_KEY);
+        // key = getIntent().getStringExtra(Constants.TEACHERS_KEY);                   Later
         Log.d(TAG, "onCreate: " + key);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

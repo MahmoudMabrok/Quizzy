@@ -79,6 +79,19 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     Animation animationDown;
     Animation animationUP;
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +99,6 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
         ButterKnife.bind(this);
         initRv();
 
-        EventBus.getDefault().register(this);
         animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         animationUP = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 

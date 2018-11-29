@@ -22,6 +22,7 @@ import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -32,6 +33,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import durdinapps.rxfirebase2.DataSnapshotMapper;
+import durdinapps.rxfirebase2.RxFirebaseDatabase;
+import io.reactivex.disposables.Disposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +68,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         View view = inflater.inflate(R.layout.fragment_quizz_list_teacher, container, false);
         unbinder = ButterKnife.bind(this, view);
         teacherKey = getArguments().getString(Constants.TEACHERS_KEY);
+        teacherKey = "0114919427";
         initRv();
 
         ((TeacherHome) getActivity()).name = "DDD";
@@ -79,40 +84,29 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         database = FirebaseDatabase.getInstance();
 
         //region fetch data
-        FirebaseDatabase.getInstance().
+        DatabaseReference reference = FirebaseDatabase.getInstance().
                 getReference(Constants.USERS_KEY)
                 .child(Constants.TEACHERS_KEY)
                 .child(teacherKey)
-                .child(Constants.QUIZZ_CHILD)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        controlTextView(false);
-                        Log.d(TAG, "onDataChange: " + dataSnapshot);
-                        List<Quiz> list = new ArrayList<>();
-                        Quiz temp;
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            temp = snapshot.getValue(Quiz.class);
-                            if (temp != null) {
-                                list.add(temp);
-                            }
-                        }
-                        if (list.size() > 0) {
-                            adapter.setList(list);
-                        } else {
-                            makeNoItem();
-                        }
-                    }
+                .child(Constants.QUIZZ_CHILD);
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+        Disposable disposable = RxFirebaseDatabase.observeSingleValueEvent(reference, DataSnapshotMapper.listOf(Quiz.class))
+                .subscribe(e -> {
+                    Log.d(TAG, "initRv: " + e.size());
+                    if (e.size() > 0) {
+                        adapter.setList(e);
+                    } else {
+                        makeNoItem();
+                    }
+                    if (tvNoInternet != null) {
+                        tvNoInternet.setVisibility(View.GONE);
                     }
                 });
-        //endregion
+
     }
 
     private void makeNoItem() {
-        //  tvNoInternet.setText(getString(R.strings.no_data_found));
+        tvNoInternet.setText(getString(R.string.no_data_found));
     }
 
 
@@ -136,6 +130,9 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     @Override
     public void onQuizzClick(Quiz quiz) {
         Intent view = new Intent(getContext(), AddEditQuiz.class);
+        if (quiz != null) {
+            Log.d(TAG, "onQuizzClick: " + quiz.getQuestionList().size());
+        }
         view.putExtra("t_key", teacherKey);
         view.putExtra("q_key", quiz.getKey());
         startActivity(view);
@@ -146,13 +143,6 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         Intent intent = new Intent(getContext(), AddEditQuiz.class);
         intent.putExtra("t_key", teacherKey);
         startActivity(intent);
-      /*  // Check if we're running on Android 5.0 or higher
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivity(intent,  ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-        } else {
-            startActivity(intent );
-        }*/
-
 
     }
 }

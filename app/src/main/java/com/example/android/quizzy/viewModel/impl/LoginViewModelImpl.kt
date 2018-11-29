@@ -86,10 +86,13 @@ class LoginViewModelImpl : LoginViewModel {
 
     }
 
-    override fun login(body: HashMap<String, String>): Maybe<FirebaseUser> {
+    override fun login(body: HashMap<String, String>): Maybe<User> {
         Log.d(TAG, "login executes")
-        return api.login(body[Constants.EMAIL_KEY], body[Constants.PASSWORD_KEY]).flatMap { AuthResult ->
-            Maybe.just(AuthResult.user)
+        return api.login(body[Constants.EMAIL_KEY], body[Constants.PASSWORD_KEY]).flatMap {
+            api.getUser(it.user.uid).flatMapMaybe { User ->
+                Log.d(TAG, "Got user from api")
+                Maybe.just(User)
+            }
         }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 

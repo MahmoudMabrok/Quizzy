@@ -173,11 +173,12 @@ public class QuestionAddFragment extends Fragment {
 
     private void addQuestion(Question question) {
         EventBus.getDefault().post(question);
-        if (question != null && question.getAnswerList().size() > 0) {
+       /* if (question != null && question.getAnswerList().size() > 0) {
             ((AddEditQuiz) getActivity()).onQuestionAdd(question);
+            show("add question");
         } else {
             show("Error");
-        }
+        }*/
     }
 
     private void blankFields() {

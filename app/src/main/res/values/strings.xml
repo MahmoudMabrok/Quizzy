@@ -42,7 +42,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add">add</string>
     <string name="quiz_name">Quiz Name</string>
@@ -53,4 +52,15 @@
     <string name="f">F</string>
     <string name="s">S</string>
     <string name="na">NA</string>
+
+
+    <string name="page1_title">No paper</string>
+    <string name="page1_description">Quizzes can be done with no paper</string>
+    <string name="page2_title">Digitize your work</string>
+    <string name="page2_description">Quizzes can be digitalized through mobile application</string>
+    <string name="page3_title">Keep in touch</string>
+    <string name="page3_description">Keep connected with your students anywhere, and anytime</string>
+    <string name="page4_title">Promote the process</string>
+    <string name="page4_description">Generate reports on students\' attitudes to promote the learning process</string>
+
 </resources>
