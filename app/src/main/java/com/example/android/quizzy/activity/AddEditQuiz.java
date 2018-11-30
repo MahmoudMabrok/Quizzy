@@ -2,6 +2,7 @@ package com.example.android.quizzy.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -80,17 +81,6 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     Animation animationUP;
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,28 +121,29 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
                 //        Log.d(TAG, "onDataChange: " + quiz.toString());
                 //    Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
-                questionList = new ArrayList<>();
+                List<Question> listQuestion = new ArrayList<>();
                 Log.d(TAG, "quizz  data " + dataSnapshot);
                 //   List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
                     //QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
                     question = snapshot.getValue(Question.class);
 
-                    List<String> list = new ArrayList<>();
+                /*    List<String> list = new ArrayList<>();
                     for (DataSnapshot dataSnapshot1 : snapshot.child(Constants.answerList).getChildren()) {
                         list.add((String) dataSnapshot1.getValue());
                     }
                     question.setAnswerList(list);
-
+*/
                     //  Log.d(TAG, "onDataChange: question data  " + question.toString());
                     if (question != null) {
-                        questionList.add(question);
+                        listQuestion.add(question);
+                        // questionList.add(question);
                         Log.d(TAG, "onDataChange: " + question.toString());
                     }
                 }
-                if (rvQustionListTeacher != null && questionList.size() > 0) {
-                    adapter.setQuestionList(questionList);
-                    Log.d(TAG, "quizz data " + adapter.getQuestionList().size());
+                if (rvQustionListTeacher != null && listQuestion.size() > 0) {
+                    adapter.setQuestionList(listQuestion);
+                    show("quizz data " + adapter.getQuestionList().size());
                 }
             }
 
@@ -161,14 +152,13 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
 
             }
         });
-
-        replaceQuestionFragment();
     }
 
     private void replaceQuestionFragment() {
         transaction = manager.beginTransaction();
         QuestionAddFragment fragment = new QuestionAddFragment();
         transaction.replace(R.id.questionContainer, fragment).commit();
+        transaction.addToBackStack(null);
     }
 
     private void initRv() {
@@ -177,26 +167,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
         rvQustionListTeacher.setLayoutManager(manager);
         rvQustionListTeacher.setAdapter(adapter);
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int pos = viewHolder.getAdapterPosition();
-                Question question = questionList.get(pos);
-                if (direction == ItemTouchHelper.RIGHT) { // update
-                    adapter.remove(pos);
-                    questionList.remove(pos);
-                    replaceQuestionFragment(question);
-                } else {
-                    questionList.remove(question);
-                    adapter.remove(pos);
-                }
-            }
-        }).attachToRecyclerView(rvQustionListTeacher);
     }
 
     public Question questionToEdit;
@@ -210,21 +181,29 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     }
 
     private void replaceQuestionFragment(Question question) {
-        setQuestionToEdit(question);
-        transaction = manager.beginTransaction();
-        QuestionAddFragment fragment = new QuestionAddFragment();
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList(Constants.answerList, (ArrayList<String>) question.getAnswerList());
-        bundle.putString(Constants.question, question.getQuestion());
-        fragment.setArguments(bundle);
-        transaction.replace(R.id.questionContainer, fragment).commit();
-        setViewToAddOrUpdateQuestion();
+        try {
+            setQuestionToEdit(question);
+            transaction = manager.beginTransaction();
+            QuestionAddFragment fragment = new QuestionAddFragment();
+            Bundle bundle = new Bundle();
+            Log.d(TAG, "replaceQuestionFragment: " + question.getAnswerList().size());
+            ArrayList<String> ll = new ArrayList<>(question.getAnswerList());
+            bundle.putStringArrayList(Constants.answerList, ll);
+            bundle.putString(Constants.question, question.getQuestion());
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.questionContainer, fragment).commit();
+            transaction.addToBackStack(null);
+            setViewToAddOrUpdateQuestion();
+        } catch (Exception e) {
+            adapter.addQuestion(question);
+        }
     }
 
     @OnClick(R.id.btnSaveQuizz)
     public void onViewClicked() {
         String quizName = edQuizName.getText().toString();
         if (!TextUtils.isEmpty(quizName)) {
+            questionList = new ArrayList<>(adapter.getQuestionList());
             if (questionList.size() > 0) {
                 Quiz quiz = new Quiz();
                 quiz.setName(quizName);
@@ -264,15 +243,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
      * hidden it
      *
      */
-    @Subscribe
-    public void onEvent(Question question) {
-        if (question.getAnswerList().size() > 0) {
-            questionList.add(question);
-            adapter.addQuestion(question);
-            //make animation with gone visibility
-            setViewAfterAddQuestion();
-        }
-    }
+
 
     private void setViewAfterAddQuestion() {
         questionContainer.setVisibility(View.GONE);
@@ -308,9 +279,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
 
     @Override
     public void onClickEditQuestion(int pos) {
-        Question question = questionList.get(pos);
+        Question question = adapter.getQuestionList().get(pos);
         adapter.remove(pos);
-        questionList.remove(pos);
+        // questionList.remove(pos);
         replaceQuestionFragment(question);
 
     }
@@ -318,11 +289,63 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     @Override
     public void onClickDeleteQuestion(int pos) {
         adapter.remove(pos);
-        questionList.remove(pos);
+        //  questionList.remove(pos);
     }
 
+
+    List<Question> temp = new ArrayList<>();
     @Override
     public void onQuestionAdd(Question question) {
+        try {
+            if (question.getAnswerList().size() > 0) {
+                temp.add(question);
+                //   show("!!! "+question.getAnswerList().size() + " qList " + adapter.getQuestionList().size());
+                adapter.addQuestion(question);
+                show(" q b " + adapter.getQuestionList().size());
+                setViewAfterAddQuestion();
+                show(" qList " + adapter.getQuestionList().size());
 
+/*
+
+                new CountDownTimer(1000 * 10, 100 ) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        for(Question question1 : adapter.getQuestionList()){
+                            try {
+                                if ((question1.getAnswerList().size() > 0) ){
+
+                                }
+                            } catch (Exception e) {
+                                show("EE");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                        if (adapter != null){
+                            show("a");
+                        }
+                    }
+                }.start();
+*/
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            show("error");
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

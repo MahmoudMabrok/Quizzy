@@ -1,5 +1,6 @@
 package com.example.android.quizzy.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.quizzy.R;
+import com.example.android.quizzy.activity.AddEditQuiz;
 import com.example.android.quizzy.interfaces.OnQuestionEdit;
+import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
 
 import java.util.ArrayList;
@@ -23,12 +26,11 @@ import butterknife.ButterKnife;
  */
 public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionListAdapterAddQuiz.ViewHolder> {
 
-
     private List<Question> questionList;
     private OnQuestionEdit edit;
 
-    public QuestionListAdapterAddQuiz(OnQuestionEdit onQuestionEdit) {
-        edit = onQuestionEdit;
+    public QuestionListAdapterAddQuiz(AddEditQuiz onQuestionEdit) {
+        edit = (OnQuestionEdit) onQuestionEdit;
         questionList = new ArrayList<>();
     }
 
@@ -38,9 +40,12 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
     }
 
     public void addQuestion(Question question) {
-        questionList.add(question);
-        notifyItemInserted(questionList.size() - 1);
+        if (question.getAnswerList() != null) {
+            questionList.add(question);
+            notifyDataSetChanged();
+        }
     }
+
 
     @NonNull
     @Override
