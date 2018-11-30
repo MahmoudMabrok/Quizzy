@@ -1,18 +1,13 @@
 package com.example.android.quizzy.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.quizzy.R;
-import com.example.android.quizzy.activity.AddEditQuiz;
-import com.example.android.quizzy.interfaces.OnQuestionEdit;
-import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
 
 import java.util.ArrayList;
@@ -24,28 +19,28 @@ import butterknife.ButterKnife;
 /**
  * Created by Mahmoud on 10/22/2018.
  */
+
+
 public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionListAdapterAddQuiz.ViewHolder> {
 
-    private List<Question> questionList;
-    private OnQuestionEdit edit;
+    private List<String> questionList;
 
-    public QuestionListAdapterAddQuiz(AddEditQuiz onQuestionEdit) {
-        edit = (OnQuestionEdit) onQuestionEdit;
+    public QuestionListAdapterAddQuiz() {
         questionList = new ArrayList<>();
     }
 
     public void setQuestionList(List<Question> list) {
-        questionList = new ArrayList<>(list);
-        notifyDataSetChanged();
-    }
-
-    public void addQuestion(Question question) {
-        if (question.getAnswerList() != null) {
-            questionList.add(question);
-            notifyDataSetChanged();
+        questionList.clear();
+        for (Question question : list
+                ) {
+            addQuestion(question);
         }
     }
 
+    public void addQuestion(Question question) {
+        questionList.add(question.getQuestion());
+        notifyItemInserted(questionList.size() - 1);
+    }
 
     @NonNull
     @Override
@@ -55,23 +50,9 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        String question = questionList.get(position).getQuestion();
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String question = questionList.get(position);
         holder.tvQuestion.setText(question);
-
-        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edit.onClickDeleteQuestion(position);
-            }
-        });
-
-        holder.ivEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edit.onClickEditQuestion(position);
-            }
-        });
     }
 
     @Override
@@ -89,19 +70,10 @@ public class QuestionListAdapterAddQuiz extends RecyclerView.Adapter<QuestionLis
         notifyDataSetChanged();
     }
 
-    public List<Question> getQuestionList() {
-        return questionList;
-    }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuestion)
         TextView tvQuestion;
-
-        @BindView(R.id.ivEdit)
-        ImageView ivEdit;
-        @BindView(R.id.ivDelete)
-        ImageView ivDelete;
 
         ViewHolder(View view) {
             super(view);

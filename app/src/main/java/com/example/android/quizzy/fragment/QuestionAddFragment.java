@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,6 @@ import com.example.android.quizzy.adapter.AnwerListAddQuizAdapter;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.util.Constants;
 import com.example.android.quizzy.util.Utils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +66,8 @@ public class QuestionAddFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             String question = bundle.getString(Constants.question);
-            Question question1 = ((AddEditQuiz) getActivity()).getQuestionToEdit();
-            answerList = ((AddEditQuiz) getActivity()).questionToEdit.getAnswerList();
-
-            answerList = bundle.getStringArrayList(Constants.answerList);
-
-            fillUi(question, answerList);
+            ArrayList<String> anserList = bundle.getStringArrayList(Constants.answerList);
+            fillUi(question, anserList);
             isUpdate = true;
         }
         return view;
@@ -115,7 +108,7 @@ public class QuestionAddFragment extends Fragment {
         unbinder.unbind();
     }
 
-    private void fillUi(String question, List<String> anser) {
+    private void fillUi(String question, ArrayList<String> anser) {
         edQuestionAddFragment.setText(question);
         answerList = new ArrayList<>(anser);
         adapter.setList(answerList);
@@ -132,8 +125,8 @@ public class QuestionAddFragment extends Fragment {
     public void onBtnAddAnswerClicked() {
         String anser = edAnswerAddFragment.getText().toString();
         if (!TextUtils.isEmpty(anser)) {
-            adapter.add(new String(anser));
-            answerList.add(new String(anser));
+            adapter.add(anser);
+            answerList.add(anser);
             edAnswerAddFragment.setText("");
             Utils.hideInputKeyboard(getContext());
         } else {
@@ -145,13 +138,11 @@ public class QuestionAddFragment extends Fragment {
         Toast.makeText(getContext(), a, Toast.LENGTH_SHORT).show();
     }
 
-    private static final String TAG = "QuestionAddFragment";
     @OnClick(R.id.btnAddQuestion)
     public void onBtnAddQuestionClicked() {
         String questionName = edQuestionAddFragment.getText().toString();
         if (!TextUtils.isEmpty(questionName)) {
             if (answerList.size() > 0) {
-                Log.d(TAG, "onBtnAddQuestionClicked:  size " + answerList.size());
                 Question question = new Question();
                 question.setQuestion(questionName);
                 question.setAnswerList(answerList);
@@ -174,11 +165,8 @@ public class QuestionAddFragment extends Fragment {
     }
 
     private void addQuestion(Question question) {
-        //  EventBus.getDefault().post(question);
-        Log.d(TAG, "addQuestion:  posted question " + question.getAnswerList().size());
         if (question != null && question.getAnswerList().size() > 0) {
             ((AddEditQuiz) getActivity()).onQuestionAdd(question);
-            show("add question");
         } else {
             show("Error");
         }
@@ -190,4 +178,15 @@ public class QuestionAddFragment extends Fragment {
         answerList.clear();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        show("pause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        show("stop");
+    }
 }

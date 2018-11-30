@@ -1,11 +1,8 @@
 package com.example.android.quizzy.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Keep;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +18,7 @@ public class Question {
     private String StudentAnswer;
     private boolean state;
     private int weight;
-
+    public Map<String, List<String>> theanswer;
 
     public Question() {
     }
@@ -29,38 +26,6 @@ public class Question {
     public Question(String question, int weight, String correctAnswer) {
         this.question = question;
         this.weight = weight;
-        this.correctAnswer = correctAnswer;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public List<String> getAnswerList() {
-        return answerList;
-    }
-
-    public void setAnswerList(List<String> answerList) {
-        this.answerList = answerList;
-    }
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
     }
 
@@ -80,6 +45,49 @@ public class Question {
         this.state = state;
     }
 
+    public Map<String, List<String>> getTheanswer() {
+        return theanswer;
+    }
+
+    public void setTheanswer(Map<String, List<String>> theanswer) {
+        this.theanswer = theanswer;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "key='" + key + '\'' +
+                ", question='" + question + '\'' +
+                ", answerList=" + answerList.size() +
+                ", weight=" + weight +
+                ", correctAnswer='" + correctAnswer + '\'' +
+                '}';
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public List<String> getAnswerList() {
+        return answerList;
+    }
+
+    public void setAnswerList(List<String> answerList) {
+        this.answerList = new ArrayList<>(answerList);
+    }
+
     public int getWeight() {
         return weight;
     }
@@ -88,4 +96,11 @@ public class Question {
         this.weight = weight;
     }
 
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
 }

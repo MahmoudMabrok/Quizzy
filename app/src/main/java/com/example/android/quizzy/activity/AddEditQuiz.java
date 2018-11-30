@@ -2,7 +2,6 @@ package com.example.android.quizzy.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,7 +24,6 @@ import com.example.android.quizzy.R;
 import com.example.android.quizzy.adapter.QuestionListAdapterAddQuiz;
 import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.fragment.QuestionAddFragment;
-import com.example.android.quizzy.interfaces.OnQuestionEdit;
 import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.model.Quiz;
@@ -33,9 +31,6 @@ import com.example.android.quizzy.util.Constants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +45,7 @@ import butterknife.OnClick;
  * Input: is key of teacher to add quiz in its child node
  * EditState: when accept quiz key so it be edited
  */
-public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQuestionEdit {
+public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
 
     @BindView(R.id.edQuizName)
     EditText edQuizName;
@@ -80,14 +75,11 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
     Animation animationDown;
     Animation animationUP;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz_detali_teacher);
         ButterKnife.bind(this);
-        initRv();
 
         animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         animationUP = AnimationUtils.loadAnimation(this, R.anim.slide_up);
@@ -106,44 +98,34 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
             finish();
         }
 
+        initRv();
         replaceQuestionFragment();
     }
 
     private static final String TAG = "AddEditQuiz";
 
     private void fetchQustionList() {
-        dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addValueEventListener(new ValueEventListener() {
+        dataRepo.getSpecificQuizRef(teacherKey, quizzKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = (String) dataSnapshot.child("name").getValue();
                 edQuizName.setText(name);
                 Quiz quiz = dataSnapshot.getValue(Quiz.class);
-                //        Log.d(TAG, "onDataChange: " + quiz.toString());
-                //    Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
+                Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
-                List<Question> listQuestion = new ArrayList<>();
-                Log.d(TAG, "quizz  data " + dataSnapshot);
+                questionList = new ArrayList<>();
                 //   List<String> strings = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.child(Constants.QUIZZ_QUESTION_LIST).getChildren()) {
                     //QuestionToSerialize question2 = snapshot.getValue(QuestionToSerialize.class);
                     question = snapshot.getValue(Question.class);
-
-                /*    List<String> list = new ArrayList<>();
-                    for (DataSnapshot dataSnapshot1 : snapshot.child(Constants.answerList).getChildren()) {
-                        list.add((String) dataSnapshot1.getValue());
-                    }
-                    question.setAnswerList(list);
-*/
-                    //  Log.d(TAG, "onDataChange: question data  " + question.toString());
+                    Log.d(TAG, "onDataChange: 2 " + snapshot);
                     if (question != null) {
-                        listQuestion.add(question);
-                        // questionList.add(question);
-                        Log.d(TAG, "onDataChange: " + question.toString());
+                        questionList.add(question);
+                        //  Log.d(TAG, "onDataChange: " + question.toString());
                     }
                 }
-                if (rvQustionListTeacher != null && listQuestion.size() > 0) {
-                    adapter.setQuestionList(listQuestion);
-                    show("quizz data " + adapter.getQuestionList().size());
+                if (questionList.size() > 0) {
+                    adapter.setQuestionList(questionList);
                 }
             }
 
@@ -154,56 +136,67 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
         });
     }
 
+    private Question getQuestionFromJson(DataSnapshot snapshot) {
+        Question question = new Question();
+        question.setQuestion((String) snapshot.child("question").getValue());
+        question.setCorrectAnswer((String) snapshot.child("correctAnswer").getValue());
+        List<String> ansewrs = new ArrayList<>();
+        for (DataSnapshot snapshot1 : snapshot.child(Constants.Question_answer_list).getChildren()) {
+            ansewrs.add((String) snapshot1.getValue());
+        }
+        question.setAnswerList(ansewrs);
+        return question;
+    }
+
     private void replaceQuestionFragment() {
         transaction = manager.beginTransaction();
         QuestionAddFragment fragment = new QuestionAddFragment();
         transaction.replace(R.id.questionContainer, fragment).commit();
-        transaction.addToBackStack(null);
     }
 
     private void initRv() {
-        adapter = new QuestionListAdapterAddQuiz(this);
+        adapter = new QuestionListAdapterAddQuiz();
         LinearLayoutManager manager = new LinearLayoutManager(this);
         rvQustionListTeacher.setLayoutManager(manager);
         rvQustionListTeacher.setAdapter(adapter);
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-    }
-
-    public Question questionToEdit;
-
-    public Question getQuestionToEdit() {
-        return questionToEdit;
-    }
-
-    public void setQuestionToEdit(Question questionToEdit) {
-        this.questionToEdit = questionToEdit;
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getAdapterPosition();
+                Question question = questionList.get(pos);
+                if (direction == ItemTouchHelper.RIGHT) { // update
+                    adapter.remove(pos);
+                    questionList.remove(pos);
+                    replaceQuestionFragment(question);
+                } else {
+                    questionList.remove(question);
+                    adapter.remove(pos);
+                }
+            }
+        }).attachToRecyclerView(rvQustionListTeacher);
     }
 
     private void replaceQuestionFragment(Question question) {
-        try {
-            setQuestionToEdit(question);
-            transaction = manager.beginTransaction();
-            QuestionAddFragment fragment = new QuestionAddFragment();
-            Bundle bundle = new Bundle();
-            Log.d(TAG, "replaceQuestionFragment: " + question.getAnswerList().size());
-            ArrayList<String> ll = new ArrayList<>(question.getAnswerList());
-            bundle.putStringArrayList(Constants.answerList, ll);
-            bundle.putString(Constants.question, question.getQuestion());
-            fragment.setArguments(bundle);
-            transaction.replace(R.id.questionContainer, fragment).commit();
-            transaction.addToBackStack(null);
-            setViewToAddOrUpdateQuestion();
-        } catch (Exception e) {
-            adapter.addQuestion(question);
-        }
+        transaction = manager.beginTransaction();
+        QuestionAddFragment fragment = new QuestionAddFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(Constants.answerList, (ArrayList<String>) question.getAnswerList());
+        bundle.putString(Constants.question, question.getQuestion());
+        fragment.setArguments(bundle);
+        transaction.replace(R.id.questionContainer, fragment).commit();
+        setViewToAddOrUpdateQuestion();
     }
 
     @OnClick(R.id.btnSaveQuizz)
     public void onViewClicked() {
         String quizName = edQuizName.getText().toString();
         if (!TextUtils.isEmpty(quizName)) {
-            questionList = new ArrayList<>(adapter.getQuestionList());
             if (questionList.size() > 0) {
                 Quiz quiz = new Quiz();
                 quiz.setName(quizName);
@@ -242,8 +235,17 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
      * when add fragment finish and sent the Question
      * hidden it
      *
+     * @param question
      */
-
+    @Override
+    public void onQuestionAdd(Question question) {
+        if (question.getAnswerList().size() > 0) {
+            questionList.add(question);
+            adapter.addQuestion(question);
+            //make animation with gone visibility
+            setViewAfterAddQuestion();
+        }
+    }
 
     private void setViewAfterAddQuestion() {
         questionContainer.setVisibility(View.GONE);
@@ -275,77 +277,5 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, OnQ
         animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         quizzAndAddLayout.setAnimation(animationDown);
 
-    }
-
-    @Override
-    public void onClickEditQuestion(int pos) {
-        Question question = adapter.getQuestionList().get(pos);
-        adapter.remove(pos);
-        // questionList.remove(pos);
-        replaceQuestionFragment(question);
-
-    }
-
-    @Override
-    public void onClickDeleteQuestion(int pos) {
-        adapter.remove(pos);
-        //  questionList.remove(pos);
-    }
-
-
-    List<Question> temp = new ArrayList<>();
-    @Override
-    public void onQuestionAdd(Question question) {
-        try {
-            if (question.getAnswerList().size() > 0) {
-                temp.add(question);
-                //   show("!!! "+question.getAnswerList().size() + " qList " + adapter.getQuestionList().size());
-                adapter.addQuestion(question);
-                show(" q b " + adapter.getQuestionList().size());
-                setViewAfterAddQuestion();
-                show(" qList " + adapter.getQuestionList().size());
-
-/*
-
-                new CountDownTimer(1000 * 10, 100 ) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        for(Question question1 : adapter.getQuestionList()){
-                            try {
-                                if ((question1.getAnswerList().size() > 0) ){
-
-                                }
-                            } catch (Exception e) {
-                                show("EE");
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                        if (adapter != null){
-                            show("a");
-                        }
-                    }
-                }.start();
-*/
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            show("error");
-        }
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
     }
 }
