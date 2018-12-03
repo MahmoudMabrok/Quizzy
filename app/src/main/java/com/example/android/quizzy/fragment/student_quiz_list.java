@@ -37,7 +37,8 @@ import butterknife.Unbinder;
 
 public class student_quiz_list extends Fragment implements OnQuizzClick {
 
-    private static final String TAG = "student_quiz_list";
+    public static final String TAG = "student_quiz_list";
+
     @BindView(R.id.rvQuizListStudent)
     RecyclerView rvQuizListStudent;
     Unbinder unbinder;
@@ -45,10 +46,12 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
     QuizeListStudentAdapter adapter;
     @BindView(R.id.pbLoadingquizz)
     ProgressBar pbLoadingquizz;
-    private String teacherID;
+
     private List<Quiz> completedList = new ArrayList<>();
     private List<Quiz> quizList = new ArrayList<>();
     private String studentName;
+    private String studentUUID;
+    private String teacherID;
 
     public student_quiz_list() {
         // Required empty public constructor
@@ -57,16 +60,16 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        teacherID = "0114919427";
         if (getArguments() != null) {
-            teacherID = getArguments().getString(Constants.TEACHERS_KEY);
+            teacherID = getArguments().getString(Constants.STUDENT_Teacher_uuid);
             show("t_id " + teacherID);
             studentName = getArguments().getString(Constants.STUDENT_NAME);
             show("s_name " + studentName);
+        } else {
+            show("error");
         }
     }
 
-    String studentUUID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,9 +77,10 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_student_quiz_list, container, false);
         unbinder = ButterKnife.bind(this, view);
-        // studentUUID = dataRepo.getUUID();
-        studentUUID = "0";
+        studentUUID = dataRepo.getUUID();
+      /*  Log.d(TAG, "onCreateView: uuid " + studentUUID);
         Log.d(TAG, "id " + studentUUID + " teacher " + teacherID);
+       */
         initRv();
         retriveCompletedList(studentUUID);
         retriveQuizzList(teacherID);
@@ -85,7 +89,7 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
     }
 
     private void retriveQuizzList(String teacherID) {
-        show("aaa " + teacherID);
+        //show("aaa " + teacherID);
         dataRepo.getTeacherQuizz(teacherID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,11 +102,17 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
                         quizList.add(temp);
                     }
                 }
-                show("quiz size " + quizList.size());
-                pbLoadingquizz.setVisibility(View.GONE);
+                if (rvQuizListStudent != null) {
+                    show("quiz size " + quizList.size());
+                    pbLoadingquizz.setVisibility(View.GONE);
+                }
 
                 if (quizList.size() > 0 && completedList != null) {
                     adapter.setList(quizList, completedList);
+                } else {
+                    if (rvQuizListStudent != null) {
+                        show("NO Data");
+                    }
                 }
             }
 
@@ -112,36 +122,6 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
             }
         });
 
-        FirebaseDatabase.getInstance().getReference(Constants.USERS_KEY)
-                .child(Constants.TEACHERS_KEY)
-                .child(teacherID)
-                .child("quiz")
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG, "onChildAdded: " + dataSnapshot);
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
 
     }
 
@@ -184,15 +164,14 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
     @Override
     public void onQuizzClick(Quiz quiz) {
         Intent intent = new Intent(getContext(), QuizzQuestion.class);
-        intent.putExtra("sID", studentUUID);
-        intent.putExtra("id", quiz.getKey());
+        intent.putExtra(Constants.STUDENT_UUID, studentUUID);
+        intent.putExtra(Constants.Quizz_id, quiz.getKey());
         if (quiz.getQuestionList().get(0).getStudentAnswer() != null) {
             show("Completed ");
             intent.putExtra("s", true);
         }
         intent.putExtra(Constants.STUDENT_NAME, studentName);
-        show("in intent " + studentName);
-        intent.putExtra(Constants.TEACHERS_KEY, teacherID);
+        intent.putExtra(Constants.STUDENT_Teacher_uuid, teacherID);
         getContext().startActivity(intent);
     }
 

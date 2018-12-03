@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="@dimen/default16_margin"
+    android:gravity="center"
     tools:context=".activity.Entry">
 
     <Button

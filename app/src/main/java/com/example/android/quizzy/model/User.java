@@ -10,6 +10,8 @@ public class User {
     private String lastName;
     private String city;
 
+    public User() {
+    }
 
     User(@NonNull String id) {
         this.id = id;

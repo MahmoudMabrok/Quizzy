@@ -32,8 +32,7 @@ public class FirebaseDataSource {
     }
 
     public String getCurrentUserUUID() {
-        return "0114919427";
-        // return auth.getCurrentUser().getUid();
+        return auth.getCurrentUser().getUid();
     }
 
 

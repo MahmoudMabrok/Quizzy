@@ -190,6 +190,7 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         bundle.putString(Constants.question, question.getQuestion());
         fragment.setArguments(bundle);
         transaction.replace(R.id.questionContainer, fragment).commit();
+        transaction.addToBackStack(null);
         setViewToAddOrUpdateQuestion();
     }
 
@@ -277,5 +278,15 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
         animationDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         quizzAndAddLayout.setAnimation(animationDown);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            setViewAfterAddQuestion();
+            show("Af");
+        } else {
+            super.onBackPressed();
+        }
     }
 }

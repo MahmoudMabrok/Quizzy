@@ -15,19 +15,13 @@ import android.widget.TextView;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.activity.AddEditQuiz;
-import com.example.android.quizzy.activity.TeacherHome;
 import com.example.android.quizzy.adapter.QuizeListTeacherAdapter;
 import com.example.android.quizzy.interfaces.OnQuizzClick;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +45,8 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     FloatingActionButton fabAddQuizz;
     @BindView(R.id.tvNoInternet)
     TextView tvNoInternet;
+    @BindView(R.id.spin_kit)
+    SpinKitView spinKit;
     private QuizeListTeacherAdapter adapter;
 
 
@@ -71,7 +67,6 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         teacherKey = "0114919427";
         initRv();
 
-        ((TeacherHome) getActivity()).name = "DDD";
         return view;
     }
 
@@ -80,8 +75,14 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvQuizListTeacher.setAdapter(adapter);
         rvQuizListTeacher.setLayoutManager(manager);
-        controlTextView(true);
+        //   controlTextView(true);
         database = FirebaseDatabase.getInstance();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         //region fetch data
         DatabaseReference reference = FirebaseDatabase.getInstance().
@@ -93,19 +94,24 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         Disposable disposable = RxFirebaseDatabase.observeSingleValueEvent(reference, DataSnapshotMapper.listOf(Quiz.class))
                 .subscribe(e -> {
                     Log.d(TAG, "initRv: " + e.size());
-                    if (e.size() > 0) {
-                        adapter.setList(e);
-                    } else {
-                        makeNoItem();
+                    if (this.isResumed()) {
+                        spinKit.setVisibility(View.GONE);
+                        if (e.size() > 0) {
+                            adapter.setList(e);
+                            tvNoInternet.setVisibility(View.GONE);
+                        } else {
+                            makeNoItem();
+                        }
                     }
-                    if (tvNoInternet != null) {
+                   /* if (tvNoInternet != null) {
                         tvNoInternet.setVisibility(View.GONE);
-                    }
+                    }*/
                 });
 
     }
 
     private void makeNoItem() {
+        tvNoInternet.setVisibility(View.VISIBLE);
         tvNoInternet.setText(getString(R.string.no_data_found));
     }
 

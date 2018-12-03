@@ -70,6 +70,11 @@ public class ReportQuizzesTeacherAdapter extends RecyclerView.Adapter<ReportQuiz
         notifyItemInserted(list.size() - 1);
     }
 
+    public void clear() {
+        list.clear();
+        notifyDataSetChanged();
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvReportQuizzName)

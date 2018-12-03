@@ -32,21 +32,19 @@
 
         <TextView
             android:id="@+id/tvQuizTotalScore"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default16_margin"
-            android:layout_marginRight="@dimen/default16_margin"
+            android:textColor="@color/white"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:text="0 %"
             android:textSize="18dp" />
 
         <az.plainpie.PieView
             android:id="@+id/piStudent"
-            android:layout_width="75dp"
-            android:layout_height="60dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:visibility="gone"
-            app:inner_pie_padding="2"
+            android:layout_height="wrap_content"
             app:percentage="25" />
 
         <TextView
@@ -54,6 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:gravity="center_horizontal"
             android:text="Not Attempted"
             android:textColor="@color/not_attemped"

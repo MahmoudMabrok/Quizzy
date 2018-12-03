@@ -46,6 +46,7 @@
     <string name="add">add</string>
     <string name="quiz_name">Quiz Name</string>
     <string name="no_data_found">No Quizz Found ☹☹☹☹☹</string>
+    <string name="no_data_found1">No Data Found ☹☹☹☹☹</string>
     <string name="title_activity_student">StudentActivity</string>
     <string name="signout">Sign Out</string>
     <string name="update">Update</string>

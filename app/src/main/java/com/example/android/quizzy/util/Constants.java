@@ -26,6 +26,9 @@ public interface Constants {
     String TEACHER_TELEPHONE_NUMBER_KEY = "teacher_telephone_number";
 
 
+    String STUDENT_NAME_KEY = "student_name";
+
+
     String QUIZZ_CHILD = "quiz";
     String QUIZZ_QUESTION_LIST = "questionList";
 
@@ -48,4 +51,7 @@ public interface Constants {
     String AttemptedList = "AttemptedList";
     String STUDENT_NAME = "STUDENT_NAME";
     String QUIZZ_NAME = "name";
+    String STUDENT_UUID = "student_uuid";
+    String STUDENT_Teacher_uuid = "teacher_uuid";
+    String Quizz_id = "id";
 }

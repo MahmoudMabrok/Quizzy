@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
@@ -60,6 +61,7 @@ public class TeacherHome extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             FirebaseAuth.getInstance().signOut();
+            //open login activity
         }
 
         return super.onOptionsItemSelected(item);
@@ -73,9 +75,7 @@ public class TeacherHome extends AppCompatActivity
         setContentView(R.layout.activity_teacher_home);
         ButterKnife.bind(this);
 
-
         // key = getIntent().getStringExtra(Constants.TEACHERS_KEY);                   Later
-        Log.d(TAG, "onCreate: " + key);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -89,6 +89,9 @@ public class TeacherHome extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         openQuizzListFragment();
+
+        TextView textView = navigationView.getHeaderView(0).findViewById(R.id.nav_user_name);
+        textView.setText(key);
 
     }
 
@@ -175,7 +178,6 @@ public class TeacherHome extends AppCompatActivity
         transition.replace(R.id.container, teacher).commit();
         transition.addToBackStack(null);
     }
-
 
     public AttemptedQuiz attemptedQuiz;
 

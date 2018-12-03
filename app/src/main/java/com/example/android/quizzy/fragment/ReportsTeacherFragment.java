@@ -1,8 +1,6 @@
 package com.example.android.quizzy.fragment;
 
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
@@ -25,17 +25,13 @@ import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.model.ReportQuizzItem;
 import com.example.android.quizzy.util.Constants;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,6 +51,20 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
     RecyclerView rvReportQuiezzTeacher;
     @BindView(R.id.rvReportStudentsGradesTeacherFragment)
     RecyclerView rvReportStudentsGradesTeacherFragment;
+    @BindView(R.id.spin_kit)
+    SpinKitView spinKit;
+    @BindView(R.id.tvNoInternet)
+    TextView tvNoInternet;
+    @BindView(R.id.dividerQuizzReports)
+    View dividerQuizzReports;
+    @BindView(R.id.QuizzReortsLayout)
+    LinearLayout QuizzReortsLayout;
+    @BindView(R.id.spin_kit_student)
+    SpinKitView spinKitStudent;
+    @BindView(R.id.StudentQuizzReportLayout)
+    LinearLayout StudentQuizzReportLayout;
+    @BindView(R.id.tvNoInternetStudent)
+    TextView tvNoInternetStudent;
     private long totalStudentNumber;
     private int n_quizzes;
 
@@ -79,13 +89,14 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_reports_teacher, container, false);
         unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initRv();
         retriveTotalNStudents();
-
-
-        Toast.makeText(getContext(), ((TeacherHome) getActivity()).name, Toast.LENGTH_SHORT).show();
-
-        return view;
     }
 
     private void retriveTotalNStudents() {
@@ -93,8 +104,9 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 totalStudentNumber = dataSnapshot.getChildrenCount();
-                show("n students" + totalStudentNumber);
-                start(teacherKey);
+                if (isResumed()) {
+                    start(teacherKey);
+                }
             }
 
             @Override
@@ -124,27 +136,27 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
         repo.getTeacherQuizz(teacherKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                dataList = new ArrayList<>();
-                Data data;
-                List<AttemptedQuiz> list;
-                AttemptedQuiz attemptedQuiz;
-                for (DataSnapshot quiz : dataSnapshot.getChildren()) { // for each quizz
-                    data = new Data();
-                    data.setQuizName((String) quiz.child(Constants.QUIZZ_NAME).getValue());
-                    labels.add(data.getQuizName());
-                    Log.d(TAG, "onDataChange: Quizz name " + data.getQuizName());
-                    list = new ArrayList<>();
-                    for (DataSnapshot iteraateAttemp : quiz.child(Constants.AttemptedList).getChildren()) {
-                        attemptedQuiz = iteraateAttemp.getValue(AttemptedQuiz.class);
-                        Log.d(TAG, "onDataChange: " + attemptedQuiz);
-                        list.add(attemptedQuiz);
-                    }
+                if (isResumed()) {
+                    dataList = new ArrayList<>();
+                    Data data;
+                    List<AttemptedQuiz> list;
+                    AttemptedQuiz attemptedQuiz;
+                    for (DataSnapshot quiz : dataSnapshot.getChildren()) { // for each quizz
+                        data = new Data();
+                        data.setQuizName((String) quiz.child(Constants.QUIZZ_NAME).getValue());
+                        quizzNames.add(data.getQuizName());
+                        Log.d(TAG, "onDataChange: Quizz name " + data.getQuizName());
+                        list = new ArrayList<>();
+                        for (DataSnapshot iteraateAttemp : quiz.child(Constants.AttemptedList).getChildren()) {
+                            attemptedQuiz = iteraateAttemp.getValue(AttemptedQuiz.class);
+                            Log.d(TAG, "onDataChange: " + attemptedQuiz);
+                            list.add(attemptedQuiz);
+                        }
 
-                    data.setAttemptedQuizList(list);
-                    dataList.add(data);
-                }
-                Log.d(TAG, "onDataChange: final size " + dataList.size());
-                if (barTeacherQuizzes != null) {
+                        data.setAttemptedQuizList(list);
+                        dataList.add(data);
+                    }
+                    Log.d(TAG, "onDataChange: final size " + dataList.size());
                     startQuizAnalysis();
                 }
 
@@ -158,27 +170,15 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
         //endregion
     }
 
-   /* private BarDataSet failsSet;
-    private BarDataSet successSet;
-    private BarDataSet naSet;
 
-    private List<BarEntry> failsEntries = new ArrayList<>();
-    private List<BarEntry> successEntries = new ArrayList<>();
-    private List<BarEntry> naEntries = new ArrayList<>();*/
-
-    List<String> labels = new ArrayList<>();
-
+    List<String> quizzNames = new ArrayList<>();
     private ReportQuizzesTeacherAdapter adapter, studentAdapter;
 
     private void startQuizAnalysis() {
-      /*  for(String a : labels){
-            show(a);
-        }*/
         int fails = 0, success = 0, na = 0;
-        int xValue = 1;
-
+        int xValue = 0;
+        List<ReportQuizzItem> list = new ArrayList<>();
         HashMap<Integer, StringBuilder> grades;
-        // (1) -> analysis data and get Entries
         for (Data data : dataList) { //for each quizz
             fails = success = na = 0;
             grades = new HashMap<>();
@@ -195,72 +195,31 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
                     fails++;
                 }
             }
-         /*   int max = Collections.max(grades.keySet());
-            show("" + max);
-            if (max >= 0 ){
-            }*/
             na = (int) (totalStudentNumber - (fails + success));
             na = na >= 0 ? na : 0;
-
             //assign result value statistics to data to be sended to QuizDetail Fragment
             data.setFails(fails);
             data.setSuccess(success);
             data.setNa(na);
-/*
-            failsEntries.add(new BarEntry(xValue, fails));
-            successEntries.add(new BarEntry(xValue, success));
-            naEntries.add(new BarEntry(xValue, na));
-*/
-
-            adapter.add(new ReportQuizzItem(fails, success, na, labels.get(xValue - 1)));
-            xValue++; // represnet xAxix for barEntry
+            list.add(new ReportQuizzItem(fails, success, na, quizzNames.get(xValue)));
+            xValue++;
         }
-
-
+        spinKit.setVisibility(View.GONE);
+        if (list.size() > 0) {
+            QuizzReortsLayout.setVisibility(View.VISIBLE);
+            for (ReportQuizzItem item : list) {
+                adapter.add(item);
+            }
+            tvNoInternet.setVisibility(View.GONE);
+        } else {
+            QuizzReortsLayout.setVisibility(View.GONE);
+            tvNoInternet.setVisibility(View.VISIBLE);
+        }
         n_quizzes = dataList.size();
-      /*  // (2) -> Create  DataSet
-        failsSet = new BarDataSet(failsEntries, "Failed");
-        failsSet.setColor(Color.RED);
-
-        successSet = new BarDataSet(successEntries, "Success");
-        successSet.setColor(Color.GREEN);
-
-        naSet = new BarDataSet(naEntries, "NA");
-        naSet.setColor(Color.GRAY);
-        BarData barData = new BarData(failsSet, successSet, naSet);
-        //        BarData barData = new BarData(failsSet );
-        barTeacherQuizzes.setData(barData);
-        // barTeacherQuizzes.invalidate();*/
-
-        // (3) styles for barChart
-
-        XAxis xAxis = barTeacherQuizzes.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-        barTeacherQuizzes.getAxisLeft().setAxisMinimum(0);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1);
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setGranularityEnabled(true);
-
-        float barSpace = 0.04f;
-        float groupSpace = 0.5f;
-        //  int groupCount = 4;
-        int groupCount = dataList.size();
-
-        /*  barData.setBarWidth(0.15f);*/
-
-      /*  barTeacherQuizzes.setScaleYEnabled(true);
-        barTeacherQuizzes.getXAxis().setAxisMinimum(0);
-        barTeacherQuizzes.getXAxis().setAxisMaximum(0 + barTeacherQuizzes.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-        barTeacherQuizzes.groupBars(0, groupSpace, barSpace); // perform the "explicit" grouping
-        barTeacherQuizzes.invalidate();*/
-
         startStudnetAnalysis();
-
     }
 
     private void startStudnetAnalysis() {
-        show("n quizzes " + n_quizzes);
         retrieveCompleteList();
     }
 
@@ -268,32 +227,39 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
         repo.getStudentOfTeacherRef(teacherKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange:  complete" + dataSnapshot);
-                ReportQuizzItem item;
-                Quiz quiz;
-
-                String name;
-                int fails = 0, success = 0, na = 0;
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    name = (String) dataSnapshot1.child("name").getValue();
-                    Log.d(TAG, "onDataChange:  student " + dataSnapshot1);
-                    fails = success = na = 0;
-                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.child(Constants.COMPLETED_QUIZZ).getChildren()) {
-                        // sa
-                        quiz = dataSnapshot2.getValue(Quiz.class);
-                        if (quiz != null) {
-                            if (quiz.getGrade() > Constants.FAILED) {
-                                success++;
-                            } else {
-                                fails++;
+                if (rvReportStudentsGradesTeacherFragment != null) { // to be sure fragment in visible state
+                    Log.d(TAG, "onDataChange:  complete" + dataSnapshot);
+                    List<ReportQuizzItem> list = new ArrayList<>();
+                    Quiz quiz;
+                    String StudnetNAME;
+                    int fails = 0, success = 0, na = 0;
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        StudnetNAME = (String) dataSnapshot1.child(Constants.STUDENT_NAME).getValue();
+                        Log.d(TAG, "StudnetNAME " + StudnetNAME);
+                        fails = success = na = 0;
+                        for (DataSnapshot dataSnapshot2 : dataSnapshot1.child(Constants.COMPLETED_QUIZZ).getChildren()) {
+                            quiz = dataSnapshot2.getValue(Quiz.class);
+                            if (quiz != null) {
+                                if (quiz.getGrade() > Constants.FAILED) {
+                                    success++;
+                                } else {
+                                    fails++;
+                                }
                             }
                         }
+                        na = n_quizzes - (fails + success);
+                        na = na >= 0 ? na : 0;
+                        list.add(new ReportQuizzItem(fails, success, na, StudnetNAME));
                     }
-                    na = n_quizzes - (fails + success);
-                    na = na >= 0 ? na : 0;
-
-                    if (rvReportStudentsGradesTeacherFragment != null) {
-                        studentAdapter.add(new ReportQuizzItem(fails, success, na, name));
+                    spinKitStudent.setVisibility(View.GONE);
+                    if (list.size() > 0) {
+                        StudentQuizzReportLayout.setVisibility(View.VISIBLE);
+                        for (ReportQuizzItem item1 : list) {
+                            studentAdapter.add(item1); //used to animate inseting items
+                        }
+                        tvNoInternetStudent.setVisibility(View.GONE);
+                    } else {
+                        tvNoInternetStudent.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -303,32 +269,6 @@ public class ReportsTeacherFragment extends Fragment implements OnQuizzReportCli
 
             }
         });
-
-        /*    repo.getCompleteListRef("0114919427", studentUUID).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "onDataChange:  completeList" + dataSnapshot);
-                    List<Quiz> list = new ArrayList<>();
-                    Quiz temp;
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        temp = snapshot.getValue(Quiz.class);
-                        if (temp != null) {
-                            list.add(temp);
-                        }
-                    }
-                    completedList = new ArrayList<>(list);
-                    Log.d(TAG, "size of complete: " + completedList.size());
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        */
 
     }
 

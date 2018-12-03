@@ -2,6 +2,7 @@ package com.example.android.quizzy.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,8 +41,7 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class StudentReports extends Fragment {
-
-    private static final String TAG = "StudentReports";
+    public static final String TAG = "StudentReports";
     @BindView(R.id.piQuizzStudent)
     PieChart piQuizzStudent;
     @BindView(R.id.piQuizzStudentGrades)
@@ -57,17 +57,31 @@ public class StudentReports extends Fragment {
     private DataRepo dataRepo;
     private ArrayList<Quiz> quizList = new ArrayList<>();
 
-    private static String studentName;
-    public StudentReports() {
-        // Required empty public constructor
-        EventBus.getDefault().register(this);
+
+    private String studentName;
+    private String studentUUID;
+    private String teacherID;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            teacherID = bundle.getString(Constants.STUDENT_Teacher_uuid);
+            studentName = bundle.getString(Constants.STUDENT_NAME);
+            studentUUID = bundle.getString(Constants.STUDENT_UUID);
+
+        } else {
+            Log.d(TAG, "onCreate:  error ");
+        }
     }
 
-    @Subscribe
+    /* @Subscribe
     public void onEvent(String name) {
         studentName = name;
         Log.d(TAG, "onEvent: " + name);
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

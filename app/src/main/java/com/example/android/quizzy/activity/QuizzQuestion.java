@@ -54,11 +54,12 @@ public class QuizzQuestion extends AppCompatActivity {
         setContentView(R.layout.activity_quizz_question);
         ButterKnife.bind(this);
 
-        sID = getIntent().getStringExtra("sID");
-        quizeID = getIntent().getStringExtra("id");
-        teacher = getIntent().getStringExtra(Constants.TEACHERS_KEY);
+        sID = getIntent().getStringExtra(Constants.STUDENT_UUID);
+        quizeID = getIntent().getStringExtra(Constants.Quizz_id);
+        teacher = getIntent().getStringExtra(Constants.STUDENT_Teacher_uuid);
         studentName = getIntent().getStringExtra(Constants.STUDENT_NAME);
-        show("student name " + studentName);
+
+        Log.d(TAG, "onCreate: Student name " + studentName);
         initRv();
         repo = new DataRepo();
 

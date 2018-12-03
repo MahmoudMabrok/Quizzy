@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
@@ -36,21 +37,19 @@ import butterknife.ButterKnife;
 public class StudentActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public String studentID = "0";
     @BindView(R.id.containerStudent)
     FrameLayout containerStudent;
-    FragmentManager manager = getSupportFragmentManager();
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @BindView(R.id.pbStudent)
-    ProgressBar pbStudent;
+
+    FragmentManager manager = getSupportFragmentManager();
     private FragmentTransaction transition;
 
-    private DataRepo repo = new DataRepo();
+    public String studentID;
     public String studentName;
     public String teacherUUID;
 
@@ -61,65 +60,31 @@ public class StudentActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
         ButterKnife.bind(this);
-        //   pbStudent.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
+
+        checkLoginState(); // used to check state of curent user
+
+        studentID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d(TAG, "onCreate: " + studentID);
         Intent intent = getIntent();
-        teacherUUID = intent.getStringExtra(Constants.TEACHERS_KEY);
-        if (teacherUUID != null) {
-            show("tid " + teacherUUID);
-            // studentID = repo.getUUID();
-            studentID = "0";
-            repo.getStudentName(studentID, teacherUUID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    show("" + dataSnapshot);
-                    studentName = (String) dataSnapshot.getValue();
-                    Log.d(TAG, dataSnapshot + " onDataChange: " + studentName);
-                    show("student_name " + studentName);
-                    openQuizzListFragment();
-                    EventBus.getDefault().post(studentName);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-        }
+        studentName = intent.getStringExtra(Constants.STUDENT_NAME_KEY);
+        teacherUUID = intent.getStringExtra(Constants.TEACHER_TELEPHONE_NUMBER_KEY);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
         navView.setNavigationItemSelectedListener(this);
 
-    }
-
-    private void show(String studentName) {
-        Toast.makeText(this, studentName, Toast.LENGTH_SHORT).show();
-    }
-
-    private void openQuizzListFragment() {
-        transition = manager.beginTransaction();
-        transition.setCustomAnimations(R.anim.slide_up, 0);
-        student_quiz_list teacher = new student_quiz_list();
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.STUDENT_NAME, studentName);
-        bundle.putString(Constants.TEACHERS_KEY, teacherUUID);
-        teacher.setArguments(bundle);
-        transition.replace(R.id.containerStudent, teacher).commit();
+        TextView textView = navView.getHeaderView(0).findViewById(R.id.nav_user_name);
+        textView.setText(studentName);
+        openQuizzListFragment();
 
     }
 
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    private void checkLoginState() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            openMainActivity();
         }
     }
 
@@ -140,12 +105,22 @@ public class StudentActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             FirebaseAuth.getInstance().signOut();
-            // teacherUUID = "0114919427";
-            studentID = "0";
-            repo.getCompleteListRef(teacherUUID, studentID).removeValue();
+            openMainActivity();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openQuizzListFragment() {
+        transition = manager.beginTransaction();
+        transition.setCustomAnimations(R.anim.slide_up, 0);
+        student_quiz_list teacher = new student_quiz_list();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.STUDENT_NAME, studentName);
+        bundle.putString(Constants.STUDENT_Teacher_uuid, teacherUUID);
+        teacher.setArguments(bundle);
+        transition.replace(R.id.containerStudent, teacher).commit();
+        transition.addToBackStack(student_quiz_list.TAG);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -171,6 +146,39 @@ public class StudentActivity extends AppCompatActivity
     private void openReports() {
         transition = manager.beginTransaction();
         StudentReports studentReports = new StudentReports();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.STUDENT_NAME, studentName);
+        bundle.putString(Constants.STUDENT_Teacher_uuid, teacherUUID);
+        bundle.putString(Constants.STUDENT_UUID, studentID);
+        studentReports.setArguments(bundle);
         transition.replace(R.id.containerStudent, studentReports).commit();
+        transition.addToBackStack(StudentReports.TAG);
     }
+
+
+    private void openMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+
+    private void show(String studentName) {
+        Toast.makeText(this, studentName, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
+        }
+    }
+
+
+
 }
