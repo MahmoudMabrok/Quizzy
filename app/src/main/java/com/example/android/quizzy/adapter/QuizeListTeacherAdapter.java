@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.interfaces.OnQuizzClick;
 import com.example.android.quizzy.model.Quiz;
+import com.suke.widget.SwitchButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
  * Created by Mahmoud on 10/22/2018.
  */
 public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeacherAdapter.ViewHolder> {
+
 
     private Context context;
     private List<Quiz> quizList;
@@ -55,6 +57,14 @@ public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeach
                 onQuizzClick.onQuizzClick(quiz);
             }
         });
+        holder.switchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                onQuizzClick.onQuizzChangeState(quiz, isChecked);
+            }
+        });
+
+        holder.switchButton.setChecked(quiz.isShown());
     }
 
     @Override
@@ -65,6 +75,8 @@ public class QuizeListTeacherAdapter extends RecyclerView.Adapter<QuizeListTeach
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvQuizName)
         TextView tvQuizName;
+        @BindView(R.id.switch_button)
+        SwitchButton switchButton;
 
         ViewHolder(View view) {
             super(view);

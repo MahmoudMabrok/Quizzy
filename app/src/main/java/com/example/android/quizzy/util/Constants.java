@@ -54,4 +54,5 @@ public interface Constants {
     String STUDENT_UUID = "student_uuid";
     String STUDENT_Teacher_uuid = "teacher_uuid";
     String Quizz_id = "id";
+    String Teacher_NAME = "teacherName";
 }

@@ -1,8 +1,10 @@
 package com.example.android.quizzy.activity;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +20,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.adapter.QuestionListAdapterAddQuiz;
 import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.fragment.QuestionAddFragment;
+import com.example.android.quizzy.fragment.TimePickerQuizzFragment;
 import com.example.android.quizzy.interfaces.onQuestionAdd;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.model.Quiz;
@@ -45,7 +50,7 @@ import butterknife.OnClick;
  * Input: is key of teacher to add quiz in its child node
  * EditState: when accept quiz key so it be edited
  */
-public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
+public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd, TimePickerDialog.OnTimeSetListener {
 
     @BindView(R.id.edQuizName)
     EditText edQuizName;
@@ -59,6 +64,12 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     FloatingActionButton fabAddQuestion;
     @BindView(R.id.quizzAndAddLayout)
     RelativeLayout quizzAndAddLayout;
+    @BindView(R.id.btnSetTime)
+    Button btnSetTime;
+    @BindView(R.id.quizzHours)
+    TextView quizzHours;
+    @BindView(R.id.quizzMin)
+    TextView quizzMin;
 
     private List<Question> questionList = new ArrayList<>();
     private FragmentManager manager = getSupportFragmentManager();
@@ -72,8 +83,10 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     private boolean isUpdate;
 
 
+    private int hours, minuts;
     Animation animationDown;
     Animation animationUP;
+    private boolean isShown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +124,12 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 String name = (String) dataSnapshot.child("name").getValue();
                 edQuizName.setText(name);
                 Quiz quiz = dataSnapshot.getValue(Quiz.class);
+
+                hours = quiz.getHour();
+                minuts = quiz.getMinute();
+                isShown = quiz.isShown();
+                setHourMintInView();
+
                 Log.d(TAG, "onDataChange:  1 " + dataSnapshot);
                 Question question;
                 questionList = new ArrayList<>();
@@ -203,6 +222,9 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
                 quiz.setName(quizName);
                 quiz.setQuestionList(questionList);
                 quiz.setTeacherKey(teacherKey);
+                quiz.setHour(hours);
+                quiz.setMinute(minuts);
+                quiz.setShown(isShown);
                 if (isUpdate) {
                     quiz.setKey(quizzKey);
                     show("updated");
@@ -284,9 +306,32 @@ public class AddEditQuiz extends AppCompatActivity implements onQuestionAdd {
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             setViewAfterAddQuestion();
-            show("Af");
         } else {
             super.onBackPressed();
         }
+    }
+
+
+    private void setHourMintInView() {
+        quizzHours.setText(String.valueOf(hours) + "  Hours");
+        quizzMin.setText(String.valueOf(minuts + "  Minuts"));
+    }
+
+    @OnClick(R.id.btnSetTime)
+    public void onViewClickedSetTime() {
+        DialogFragment dialogFragment = new TimePickerQuizzFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("H", hours);
+        bundle.putInt("M", minuts);
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(getSupportFragmentManager(), "Set Time For Quizz");
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        hours = hourOfDay;
+        minuts = minute;
+        setHourMintInView();
+
     }
 }

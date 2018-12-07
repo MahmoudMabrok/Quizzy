@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, TeacherHome::class.java)
         intent.putExtra(Constants.TELEPHONE_NUMBER_KEY, telephoneNumber)
         startActivity(intent)
+        finish()
     }
 
     private fun moveToStudentActivity(teacherTelephoneNumber: String, studentName: String) {
@@ -77,5 +78,6 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(Constants.TEACHER_TELEPHONE_NUMBER_KEY, teacherTelephoneNumber)
         intent.putExtra(Constants.STUDENT_NAME_KEY, studentName)
         startActivity(intent)
+        finish()
     }
 }

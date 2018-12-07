@@ -105,6 +105,7 @@ public class StudentActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             FirebaseAuth.getInstance().signOut();
+            getPreferences(MODE_PRIVATE).edit().clear().apply();
             openMainActivity();
         }
 
@@ -157,7 +158,9 @@ public class StudentActivity extends AppCompatActivity
 
 
     private void openMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 
@@ -171,7 +174,7 @@ public class StudentActivity extends AppCompatActivity
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (getFragmentManager().getBackStackEntryCount() > 0) {
+            if (getFragmentManager().getBackStackEntryCount() > 1) {
                 getFragmentManager().popBackStack();
             } else {
                 super.onBackPressed();

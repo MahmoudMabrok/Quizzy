@@ -1,12 +1,14 @@
 package com.example.android.quizzy.activity;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quizzy.R;
@@ -17,6 +19,7 @@ import com.example.android.quizzy.model.NotifactionItem;
 import com.example.android.quizzy.model.Question;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
+import com.example.android.quizzy.util.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -40,19 +43,27 @@ public class QuizzQuestion extends AppCompatActivity {
     Quiz quiz;
     @BindView(R.id.quizzSubmit)
     Button quizzSubmit;
+    @BindView(R.id.timeQuiz)
+    TextView timeQuiz;
     private QuestionQuizAdapter adapter;
 
+    //add name to message
+    private String successString = "Congratulations \nKeep Going";
+    private String failString = "OOOH Sorry  \nStudy More Next Time";
 
     String sID;
     String quizeID;
     String teacher;
     String studentName;
 
+    CountDownTimer countTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz_question);
         ButterKnife.bind(this);
+
 
         sID = getIntent().getStringExtra(Constants.STUDENT_UUID);
         quizeID = getIntent().getStringExtra(Constants.Quizz_id);
@@ -70,6 +81,7 @@ public class QuizzQuestion extends AppCompatActivity {
                     Log.d(TAG, "LLL " + dataSnapshot);
                     quiz = dataSnapshot.getValue(Quiz.class);
                     setQuestionList(quiz.getQuestionList());
+                    setTimer(quiz.getHour(), quiz.getMinute());
                 }
 
                 @Override
@@ -77,6 +89,7 @@ public class QuizzQuestion extends AppCompatActivity {
 
                 }
             });
+
         } else {
             repo.getStudentCompletedQuizz(teacher, sID, quizeID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -91,10 +104,31 @@ public class QuizzQuestion extends AppCompatActivity {
 
                 }
             });
-
             quizzSubmit.setVisibility(View.GONE);
         }
 
+    }
+
+    private void setTimer(int hour, int minute) {
+        minute += (hour * 60);
+        countTimer = new CountDownTimer((1000 * 60 * minute), 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String time = Utils.timeToString(millisUntilFinished);
+                timeQuiz.setText(time);
+            }
+
+            @Override
+            public void onFinish() {
+                if (!isFinishing()) {
+                    timeQuiz.setText(Utils.timeToString(0));
+                    show("Bye");
+                    onViewClicked();
+                    quizzSubmit.setVisibility(View.GONE);
+                }
+            }
+        };
+        countTimer.start();
     }
 
     private void setQuestionList(List<Question> questionList) {
@@ -107,11 +141,14 @@ public class QuizzQuestion extends AppCompatActivity {
         rvQuizzQuestionList.setAdapter(adapter);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         rvQuizzQuestionList.setLayoutManager(manager);
+
+
     }
 
 
     @OnClick(R.id.quizzSubmit)
     public void onViewClicked() {
+        countTimer.cancel();
         AttemptedQuiz attemptedQuiz = new AttemptedQuiz();
         NotifactionItem notifactionItem = new NotifactionItem();
         notifactionItem.setQuizzName(quiz.getName());
@@ -163,23 +200,45 @@ public class QuizzQuestion extends AppCompatActivity {
 
         if (percentage >= 50) {
             attemptedQuiz.setState(true);
+            Utils.makeAlert(this, successString, (int) percentage).show();
+
+        } else {
+
+            Utils.makeAlert(this, failString, (int) percentage).show();
         }
 
         attemptedQuiz.setStudentName(studentName);
         attemptedQuiz.setQuestionArrayList(questionList);
+/*
 
         repo.addQuizTOCompleteList(quiz, sID);
         repo.addAttemted(attemptedQuiz, quizeID, teacher);
         repo.addNotification(teacher, notifactionItem);
-
+*/
         show("Quizz Solved ");
-        finish();
-        overridePendingTransition(R.anim.slide_up, R.anim.slide_down); // animation with finish the activity
 
+        new CountDownTimer(2000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
 
+            }
+
+            @Override
+            public void onFinish() {
+                onBackPressed();
+            }
+        }.start();
     }
 
     private void show(String quizz_solved_) {
         Toast.makeText(this, quizz_solved_, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.slide_up, R.anim.slide_down); // animation with finish the activity
+
     }
 }

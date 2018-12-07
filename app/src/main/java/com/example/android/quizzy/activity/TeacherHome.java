@@ -1,5 +1,6 @@
 package com.example.android.quizzy.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +25,7 @@ import com.example.android.quizzy.fragment.ShowSolvedQuiz;
 import com.example.android.quizzy.model.AttemptedQuiz;
 import com.example.android.quizzy.model.Data;
 import com.example.android.quizzy.util.Constants;
+import com.example.android.quizzy.util.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
@@ -61,13 +63,14 @@ public class TeacherHome extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             FirebaseAuth.getInstance().signOut();
-            //open login activity
+            getPreferences(MODE_PRIVATE).edit().clear().apply();
+            openMainActivity();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private static final String TAG = "TeacherHome";
+    public static final String TAG = "TeacherHome";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +78,10 @@ public class TeacherHome extends AppCompatActivity
         setContentView(R.layout.activity_teacher_home);
         ButterKnife.bind(this);
 
-        // key = getIntent().getStringExtra(Constants.TEACHERS_KEY);                   Later
+        key = getIntent().getStringExtra(Constants.TEACHER_TELEPHONE_NUMBER_KEY);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -191,5 +193,11 @@ public class TeacherHome extends AppCompatActivity
 
     }
 
+
+    private void openMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 
 }

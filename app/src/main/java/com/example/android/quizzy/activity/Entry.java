@@ -42,16 +42,15 @@ public class Entry extends AppCompatActivity {
 
     }
 
+    String name = "Mahmoud";
+    String teacherID = "0114919427";
+    String eqmilStudent = "a@gmail.com";
+    String eqmilTeacher = "aa@gmail.com";
+    String pass = "123456";
+
     @Override
     protected void onResume() {
         super.onResume();
-
-        String name = "Mahmoud";
-        String teacherID = "0114919427";
-        String eqmil = "ma@gmail.com";
-        String pass = "123456";
-
-
 /*
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(eqmil , pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -104,12 +103,57 @@ public class Entry extends AppCompatActivity {
 
     @OnClick(R.id.btnIoenTeacher)
     public void onBtnIoenTeacherClicked() {
-        startActivity(new Intent(this, TeacherHome.class));
+
+        String TeacherTelephone = "0114919427";
+        name = "MR mabrok";
+        Intent intent = new Intent(Entry.this, TeacherHome.class);
+        intent.putExtra(Constants.TEACHER_TELEPHONE_NUMBER_KEY, TeacherTelephone);
+        intent.putExtra(Constants.Teacher_NAME, name);
+        startActivity(intent);
+
+/*
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(eqmilTeacher , pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+
+                }   else{
+                    Toast.makeText(Entry.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+*/
     }
 
     @OnClick(R.id.btnIoenStudent)
     public void onBtnIoenStudentClicked() {
-        Intent intent = new Intent(this, StudentActivity.class);
+
+        String TeacherTelephone = "0114919427";
+        name = "Mahmoud";
+        Intent intent = new Intent(Entry.this, StudentActivity.class);
+        intent.putExtra(Constants.TEACHER_TELEPHONE_NUMBER_KEY, TeacherTelephone);
+        intent.putExtra(Constants.STUDENT_NAME_KEY, name);
         startActivity(intent);
+
+
+      /*  FirebaseAuth.getInstance().signInWithEmailAndPassword(eqmilStudent , pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    String TeacherTelephone  = "0114919427" ;
+                    name = "Mahmoud" ;
+                    Intent intent = new Intent(Entry.this  ,StudentActivity.class);
+                    intent.putExtra(Constants.TEACHER_TELEPHONE_NUMBER_KEY , TeacherTelephone);
+                    intent.putExtra(Constants.STUDENT_NAME_KEY , name);
+                    startActivity(intent);
+
+                }   else{
+                    Toast.makeText(Entry.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });*/
+
+       /* Intent intent = new Intent(this, StudentActivity.class);
+        startActivity(intent);*/
     }
 }

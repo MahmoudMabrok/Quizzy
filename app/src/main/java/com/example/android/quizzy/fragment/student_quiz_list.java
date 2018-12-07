@@ -62,9 +62,9 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             teacherID = getArguments().getString(Constants.STUDENT_Teacher_uuid);
-            show("t_id " + teacherID);
+            //  show("t_id " + teacherID);
             studentName = getArguments().getString(Constants.STUDENT_NAME);
-            show("s_name " + studentName);
+            //    show("s_name " + studentName);
         } else {
             show("error");
         }
@@ -99,11 +99,12 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
                     Log.d(TAG, "@2 onDataChange: " + dataSnapshot1);
                     temp = dataSnapshot1.getValue(Quiz.class);
                     if (temp != null && temp.getName() != null) {
-                        quizList.add(temp);
+                        if (temp.isShown()) {
+                            quizList.add(temp);
+                        }
                     }
                 }
                 if (rvQuizListStudent != null) {
-                    show("quiz size " + quizList.size());
                     pbLoadingquizz.setVisibility(View.GONE);
                 }
 
@@ -173,6 +174,11 @@ public class student_quiz_list extends Fragment implements OnQuizzClick {
         intent.putExtra(Constants.STUDENT_NAME, studentName);
         intent.putExtra(Constants.STUDENT_Teacher_uuid, teacherID);
         getContext().startActivity(intent);
+    }
+
+    @Override
+    public void onQuizzChangeState(Quiz quiz, boolean isChecked) {
+
     }
 
     private void show(String name) {

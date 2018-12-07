@@ -4,14 +4,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.brkckr.circularprogressbar.CircularProgressBar;
 import com.example.android.quizzy.R;
+
+import az.plainpie.PieView;
 
 public class Utils {
 
@@ -25,6 +30,7 @@ public class Utils {
         return new AlertDialog.Builder(context).setView(view).create();
     }
     */
+
     /**
      * checks if the device is connected to the internet or not
      *
@@ -68,6 +74,7 @@ public class Utils {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
+
     /**
      * Checks if telephoneNumber is valid(consists of only numbers)
      */
@@ -87,6 +94,31 @@ public class Utils {
             }
         }
         return true;
+    }
+
+
+    public static AlertDialog makeAlert(Context context, String title, int percentage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.alert_quiz_grade, null);
+        TextView textView = view.findViewById(R.id.text);
+        textView.setText(title);
+        TextView score = view.findViewById(R.id.score);
+        score.setText(String.valueOf(percentage));
+        CircularProgressBar bar = view.findViewById(R.id.circularProgressBar);
+        bar.setProgressValue(percentage);
+
+        return builder.setView(view).create();
+
+    }
+
+
+    public static String timeToString(long durationInMillis) {
+        long second = (durationInMillis / 1000) % 60;
+        long minute = (durationInMillis / (1000 * 60)) % 60;
+        long hour = (durationInMillis / (1000 * 60 * 60)) % 24;
+
+        return String.format("%02d:%02d:%02d", hour, minute, second);
+
     }
 
 }

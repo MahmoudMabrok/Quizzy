@@ -17,9 +17,37 @@ public class Quiz {
     private String teacherKey;
     private List<Question> questionList ;
     private int score;
+    private boolean shown;
     private int percentage;
     private int grade;
+    private int hour = 0;
+    private int minute = 1;
     public Quiz() {
+    }
+
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+    }
+
+    public boolean isShown() {
+        return shown;
+    }
+
+    public void setShown(boolean shown) {
+        this.shown = shown;
     }
 
     public String getKey() {

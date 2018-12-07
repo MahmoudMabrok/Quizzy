@@ -14,12 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_loggo_round"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginActivity"
@@ -30,7 +25,9 @@
             android:label="@string/title_activity_teacher_home"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+        </activity>
         <activity
             android:name=".activity.AddEditQuiz"
             android:screenOrientation="portrait" />
@@ -46,7 +43,12 @@
         <activity
             android:name=".activity.Entry"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
 

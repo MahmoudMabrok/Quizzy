@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.android.quizzy.R;
 import com.example.android.quizzy.activity.AddEditQuiz;
 import com.example.android.quizzy.adapter.QuizeListTeacherAdapter;
+import com.example.android.quizzy.api.DataRepo;
 import com.example.android.quizzy.interfaces.OnQuizzClick;
 import com.example.android.quizzy.model.Quiz;
 import com.example.android.quizzy.util.Constants;
@@ -49,6 +50,12 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
     SpinKitView spinKit;
     private QuizeListTeacherAdapter adapter;
 
+    @Override
+    public void onQuizzChangeState(Quiz quiz, boolean isChecked) {
+        //// TODO: 12/7/2018
+        quiz.setShown(isChecked);
+        dataRepo.addQuiz(quiz);
+    }
 
     public QuizzListTeacher() {
         // Required empty public constructor
@@ -56,7 +63,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
 
     private String teacherKey;
     private FirebaseDatabase database;
-
+    private DataRepo dataRepo = new DataRepo();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,7 +83,7 @@ public class QuizzListTeacher extends Fragment implements OnQuizzClick {
         rvQuizListTeacher.setAdapter(adapter);
         rvQuizListTeacher.setLayoutManager(manager);
         //   controlTextView(true);
-        database = FirebaseDatabase.getInstance();
+        //   database = FirebaseDatabase.getInstance();
 
     }
 

@@ -77,12 +77,6 @@ public class StudentReports extends Fragment {
         }
     }
 
-    /* @Subscribe
-    public void onEvent(String name) {
-        studentName = name;
-        Log.d(TAG, "onEvent: " + name);
-    }*/
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -90,11 +84,8 @@ public class StudentReports extends Fragment {
         View view = inflater.inflate(R.layout.fragment_student_reports, container, false);
         unbinder = ButterKnife.bind(this, view);
         dataRepo = new DataRepo();
-        retriveQuizzList("0114919427");
-        retriveCompletedList("1");
-
-        Toast.makeText(getContext(), studentName, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onCreateView: ");
+        retriveQuizzList(teacherID);
+        retriveCompletedList(studentUUID);
 
         return view;
     }
@@ -209,8 +200,6 @@ public class StudentReports extends Fragment {
             }
         }
         int[] values = new int[]{execellent, vgood, good, accept, fail};
-        /* int[] values = new int[]{10, 15, 25, 14, 2};
-         */
 
         PieData pieData = getPieDataFromEntries("Quizzes", values, labels);
         if (piQuizzStudentGrades != null && values.length > 0) {

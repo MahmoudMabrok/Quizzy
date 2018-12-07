@@ -7,4 +7,6 @@ import com.example.android.quizzy.model.Quiz;
  */
 public interface OnQuizzClick {
     void onQuizzClick(Quiz quiz);
+
+    void onQuizzChangeState(Quiz quiz, boolean isChecked);
 }
