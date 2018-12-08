@@ -210,7 +210,6 @@ public class QuizzQuestion extends AppCompatActivity {
         attemptedQuiz.setStudentName(studentName);
         attemptedQuiz.setQuestionArrayList(questionList);
 /*
-
         repo.addQuizTOCompleteList(quiz, sID);
         repo.addAttemted(attemptedQuiz, quizeID, teacher);
         repo.addNotification(teacher, notifactionItem);
